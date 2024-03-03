@@ -20,3 +20,11 @@ impl RsaPublic {
         Ok(message.powmod(exp, &self.divisor))
     }
 }
+
+#[derive(Debug)]
+pub struct RsaPrivate {
+    pub private_exponent: UBig,
+
+    pub prime_1: UBig,
+    pub prime_2: UBig,
+}
