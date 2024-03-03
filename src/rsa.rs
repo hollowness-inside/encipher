@@ -39,7 +39,11 @@ impl RsaPrivate {
 }
 
 #[derive(Debug)]
-pub struct RsaKeyPair(pub RsaPublic, pub RsaPrivate);
+pub struct RsaKeyPair {
+    pub public: RsaPublic,
+    pub private: RsaPrivate,
+    pub chunk_size: usize,
+}
 
 impl RsaKeyPair {
     pub fn new(bit_length: usize, persistence: usize) -> Self {
@@ -53,23 +57,24 @@ impl RsaKeyPair {
         let (_, d, _) = e.extended_gcd(&totient);
         let d: UBig = d.try_into().expect("Cannot convert d to UBig");
 
-        Self(
-            RsaPublic {
+        Self {
+            public: RsaPublic {
                 exponent: e,
                 divisor: n,
             },
-            RsaPrivate {
+            private: RsaPrivate {
                 private_exponent: d,
                 prime_1: p,
                 prime_2: q,
             },
-        )
+            chunk_size: 16,
+        }
     }
 
     pub fn encrypt(&self, message: &[u8]) -> Vec<UBig> {
-        pad_message(&message, 16)
-            .chunks_exact(16)
-            .map(|chunk| self.0.encrypt(chunk))
+        pad_message(&message, self.chunk_size)
+            .chunks_exact(self.chunk_size)
+            .map(|chunk| self.public.encrypt(chunk))
             .collect::<Result<_>>()
             .unwrap()
     }
