@@ -46,7 +46,7 @@ impl ElGamalKeyPair {
         }
     }
 
-    fn encrypt<'c, C: TypedContent>(&self, content: C) -> Result<Message> {
+    pub fn encrypt<'c, C: TypedContent>(&self, content: C) -> Result<Message> {
         let (content_type, bytes) = content.typed();
         let blocks: Vec<_> = pad_message(&bytes, self.chunk_size)
             .chunks_exact(self.chunk_size)
