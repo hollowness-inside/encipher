@@ -5,9 +5,11 @@ use rand::Rng;
 
 use crate::message::Content;
 use crate::message::Message;
+use crate::result::Error;
 use crate::result::Result;
 use crate::typed::TypedContent;
 use crate::utils::pad_message;
+use crate::utils::unpad_message;
 
 use super::ElGamalPrivate;
 use super::ElGamalPublic;
@@ -57,5 +59,18 @@ impl ElGamalKeyPair {
             content_type,
             content: Content::ElGamal(self.chunk_size, blocks),
         })
+    }
+
+    pub fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
+        let Content::ElGamal(chunk_size, chunks) = message.content else {
+            return Err(Error::IncorrectAlgorithm);
+        };
+
+        let bytes: Vec<u8> = chunks
+            .iter()
+            .flat_map(|chunk| self.private.decrypt(chunk).to_le_bytes())
+            .collect();
+
+        Ok(unpad_message(&bytes, chunk_size).to_vec())
     }
 }
