@@ -7,7 +7,6 @@ use super::public::RabinPublic;
 pub struct RabinKeyPair {
     pub public: RabinPublic,
     pub private: RabinPrivate,
-    pub version: usize,
 }
 
 impl RabinKeyPair {
@@ -24,7 +23,6 @@ impl RabinKeyPair {
                 prime_1: p,
                 prime_2: q,
             },
-            version: 0,
         }
     }
 }
