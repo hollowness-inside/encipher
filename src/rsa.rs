@@ -1,4 +1,4 @@
-use crate::message::{Content, ContentType, Message};
+use crate::message::{Content, Message};
 use crate::result::{Error, Result};
 use crate::typed::TypedContent;
 
