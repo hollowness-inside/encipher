@@ -19,6 +19,7 @@ name = "encipher"
 version = "0.1.0"
 dependencies = [
  "ibig",
+ "powmod",
 ]
 
 [[package]]
@@ -40,6 +41,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "da0df0e5185db44f69b44f26786fe401b6c293d1907744beaa7fa62b2e5a517a"
 dependencies = [
  "autocfg",
+]
+
+[[package]]
+name = "powmod"
+version = "0.1.0"
+source = "git+https://github.com/hollowness-inside/ibig-powmod#51f307f14c38c40d16cf5654f500a4af3aa7f9de"
+dependencies = [
+ "ibig",
+ "num-traits",
 ]
 
 [[package]]
