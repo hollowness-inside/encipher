@@ -19,6 +19,7 @@ name = "encipher"
 version = "0.1.0"
 dependencies = [
  "ibig",
+ "jacobi",
  "powmod",
  "prime-gen",
 ]

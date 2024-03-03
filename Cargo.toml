@@ -7,5 +7,6 @@ edition = "2021"
 
 [dependencies]
 ibig = "0.3.6"
+jacobi = { git = "https://github.com/hollowness-inside/ibig-jacobi", version = "0.1.0" }
 powmod = { git = "https://github.com/hollowness-inside/ibig-powmod", version = "0.1.0" }
 prime-gen = { git = "https://github.com/hollowness-inside/ibig-prime-gen", version = "0.1.0" }
