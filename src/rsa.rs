@@ -1,3 +1,4 @@
+use crate::message::{Content, ContentType, Message};
 use crate::result::{Error, Result};
 
 use ibig::{ubig, UBig};
@@ -71,12 +72,19 @@ impl RsaKeyPair {
         }
     }
 
-    pub fn encrypt(&self, message: &[u8]) -> Vec<UBig> {
-        pad_message(&message, self.chunk_size)
+    pub fn encrypt(&self, message: &[u8]) -> Message {
+        let content: Vec<_> = pad_message(&message, self.chunk_size)
             .chunks_exact(self.chunk_size)
             .map(|chunk| self.public.encrypt(chunk))
             .collect::<Result<_>>()
-            .unwrap()
+            .unwrap();
+
+        let content = Content::Rsa(self.chunk_size, content);
+
+        Message {
+            content_type: ContentType::Bytes,
+            content,
+        }
     }
 }
 
