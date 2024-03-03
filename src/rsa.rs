@@ -59,9 +59,9 @@ impl RsaKeyPair {
                 divisor: n,
             },
             RsaPrivate {
-                private_exponent: d.clone(),
-                prime_1: p.clone(),
-                prime_2: q.clone(),
+                private_exponent: d,
+                prime_1: p,
+                prime_2: q,
             },
         )
     }
