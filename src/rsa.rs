@@ -88,6 +88,19 @@ impl RsaKeyPair {
             content,
         })
     }
+
+    pub fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
+        let Content::Rsa(chunk_size, chunks) = message.content else {
+            return Err(Error::IncorrectAlgorithm);
+        };
+
+        let bytes: Vec<u8> = chunks
+            .iter()
+            .flat_map(|chunk| self.private.decrypt(chunk).to_le_bytes())
+            .collect();
+
+        Ok(unpad_message(&bytes, chunk_size).to_vec())
+    }
 }
 
 pub fn pad_message(bytes: &[u8], block_size: usize) -> Vec<u8> {
@@ -102,4 +115,24 @@ pub fn pad_message(bytes: &[u8], block_size: usize) -> Vec<u8> {
     let mut padded_text = bytes.to_vec();
     padded_text.extend_from_slice(&padding);
     padded_text
+}
+
+pub fn unpad_message(bytes: &[u8], block_size: usize) -> &[u8] {
+    if let Some(&pad_len) = bytes.last() {
+        let pad_len = pad_len as usize;
+        let byte_len = bytes.len();
+
+        if pad_len > byte_len {
+            return bytes;
+        }
+
+        let new_len = byte_len - pad_len;
+        if pad_len >= block_size {
+            return bytes;
+        }
+
+        return &bytes[0..new_len];
+    }
+
+    panic!("Empty array");
 }
