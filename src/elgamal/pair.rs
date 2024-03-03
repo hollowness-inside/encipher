@@ -1,5 +1,5 @@
-use super::private::ElGamalPrivate;
-use super::public::ElGamalPublic;
+use super::ElGamalPrivate;
+use super::ElGamalPublic;
 
 #[derive(Debug)]
 pub struct ElGamalKeyPair {
