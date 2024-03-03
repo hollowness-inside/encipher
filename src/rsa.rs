@@ -65,4 +65,8 @@ impl RsaKeyPair {
             },
         )
     }
+
+    pub fn encrypt(&self, message: &[u8]) -> Vec<u8> {
+        self.0.encrypt(message).unwrap().to_le_bytes()
+    }
 }
