@@ -70,3 +70,9 @@ impl KeyPair for RsaKeyPair {
         Ok(unpad_message(&bytes, chunk_size).to_vec())
     }
 }
+
+impl RsaKeyPair {
+    pub fn set_chunk_size(&mut self, chunk_size: usize) {
+        self.chunk_size = chunk_size;
+    }
+}
