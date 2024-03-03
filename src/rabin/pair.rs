@@ -1,11 +1,12 @@
 use ibig::UBig;
 
 use crate::message::{Content, Message};
-use crate::result::Result;
+use crate::result::{Error, Result};
 use crate::typed::TypedContent;
 
 use super::private::RabinPrivate;
 use super::public::RabinPublic;
+use super::MAGIC;
 
 #[derive(Debug)]
 pub struct RabinKeyPair {
@@ -38,6 +39,29 @@ impl RabinKeyPair {
             content_type,
             content: Content::Rabin(rabin),
         })
+    }
+
+    pub fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
+        let Content::Rabin(content) = message.content else {
+            return Err(Error::IncorrectAlgorithm);
+        };
+
+        let decrypted: Option<Vec<u8>> =
+            self.private.decrypt(content).into_iter().find_map(|msg| {
+                let Ok(msg) = TryInto::<UBig>::try_into(msg) else {
+                    return None;
+                };
+
+                let bytes = msg.to_le_bytes();
+                if bytes.ends_with(MAGIC) {
+                    let bytes: Vec<_> = bytes[..bytes.len() - 8].to_vec();
+                    return Some(bytes);
+                }
+
+                None
+            });
+
+        decrypted.ok_or(Error::MessageNotFound)
     }
 }
 
