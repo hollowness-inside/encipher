@@ -9,6 +9,7 @@ pub struct Message {
 #[derive(Debug)]
 pub enum Content {
     Rsa(usize, Vec<UBig>),
+    ElGamal(usize, Vec<[UBig; 2]>),
     Rabin(UBig),
 }
 

@@ -3,6 +3,12 @@ use powmod::PowMod;
 use prime_gen::gen_sized_prime;
 use rand::Rng;
 
+use crate::message::Content;
+use crate::message::Message;
+use crate::result::Result;
+use crate::typed::TypedContent;
+use crate::utils::pad_message;
+
 use super::ElGamalPrivate;
 use super::ElGamalPublic;
 
@@ -38,5 +44,18 @@ impl ElGamalKeyPair {
             private: ElGamalPrivate { prime, key },
             chunk_size: 16,
         }
+    }
+
+    fn encrypt<'c, C: TypedContent>(&self, content: C) -> Result<Message> {
+        let (content_type, bytes) = content.typed();
+        let blocks: Vec<_> = pad_message(&bytes, self.chunk_size)
+            .chunks_exact(self.chunk_size)
+            .map(|chunk| self.public.encrypt(chunk))
+            .collect::<Result<_>>()?;
+
+        Ok(Message {
+            content_type,
+            content: Content::ElGamal(self.chunk_size, blocks),
+        })
     }
 }
