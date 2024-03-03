@@ -108,7 +108,7 @@ impl RsaKeyPair {
         Self::generate(bit_length, 10)
     }
 
-    /// Sets the chunk size used for message padding and encryption.
+    /// Sets the chunk size used for message padding.
     pub fn set_chunk_size(&mut self, chunk_size: usize) {
         self.chunk_size = chunk_size;
     }
