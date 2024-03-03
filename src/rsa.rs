@@ -66,7 +66,25 @@ impl RsaKeyPair {
         )
     }
 
-    pub fn encrypt(&self, message: &[u8]) -> Vec<u8> {
-        self.0.encrypt(message).unwrap().to_le_bytes()
+    pub fn encrypt(&self, message: &[u8]) -> Vec<UBig> {
+        pad_message(&message, 16)
+            .chunks_exact(16)
+            .map(|chunk| self.0.encrypt(chunk))
+            .collect::<Result<_>>()
+            .unwrap()
     }
+}
+
+pub fn pad_message(bytes: &[u8], block_size: usize) -> Vec<u8> {
+    let len = bytes.len();
+    if len % block_size == 0 {
+        return bytes.to_vec();
+    }
+
+    let pad_len = block_size - (len % block_size);
+    let padding = vec![pad_len as u8; pad_len];
+
+    let mut padded_text = bytes.to_vec();
+    padded_text.extend_from_slice(&padding);
+    padded_text
 }
