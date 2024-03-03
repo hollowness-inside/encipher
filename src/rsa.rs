@@ -1,5 +1,6 @@
 use crate::message::{Content, ContentType, Message};
 use crate::result::{Error, Result};
+use crate::typed::TypedContent;
 
 use ibig::{ubig, UBig};
 use powmod::PowMod;
@@ -72,8 +73,10 @@ impl RsaKeyPair {
         }
     }
 
-    pub fn encrypt(&self, message: &[u8]) -> Message {
-        let content: Vec<_> = pad_message(&message, self.chunk_size)
+    pub fn encrypt<C: TypedContent>(&self, message: C) -> Message {
+        let (content_type, bytes) = message.typed();
+
+        let content: Vec<_> = pad_message(&bytes, self.chunk_size)
             .chunks_exact(self.chunk_size)
             .map(|chunk| self.public.encrypt(chunk))
             .collect::<Result<_>>()
@@ -82,7 +85,7 @@ impl RsaKeyPair {
         let content = Content::Rsa(self.chunk_size, content);
 
         Message {
-            content_type: ContentType::Bytes,
+            content_type,
             content,
         }
     }
