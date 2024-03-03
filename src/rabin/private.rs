@@ -1,5 +1,7 @@
 use ibig::{IBig, UBig};
 
+use crate::sqrt::SquareRootMod;
+
 #[derive(Debug)]
 pub struct RabinPrivate {
     pub prime_1: UBig,
