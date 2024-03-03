@@ -77,6 +77,10 @@ impl KeyPair for ElGamalKeyPair {
 }
 
 impl ElGamalKeyPair {
+    pub fn new(bit_length: usize) -> Self {
+        Self::generate(bit_length, 10)
+    }
+    
     pub fn set_chunk_size(&mut self, chunk_size: usize) {
         self.chunk_size = chunk_size;
     }

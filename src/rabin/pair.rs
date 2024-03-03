@@ -74,3 +74,9 @@ fn gen_prime(byte_length: usize, persistence: usize) -> UBig {
         }
     }
 }
+
+impl RabinKeyPair {
+    pub fn new(bit_length: usize) -> Self {
+        Self::generate(bit_length, 10)
+    }
+}
