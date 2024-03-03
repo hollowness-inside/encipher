@@ -37,3 +37,7 @@ impl RsaPrivate {
         message.powmod(exp, &div)
     }
 }
+
+#[derive(Debug)]
+pub struct RsaKeyPair(pub RsaPublic, pub RsaPrivate);
+
