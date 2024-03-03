@@ -54,7 +54,7 @@ impl RabinKeyPair {
 
                 let bytes = msg.to_le_bytes();
                 if bytes.ends_with(MAGIC) {
-                    let bytes: Vec<_> = bytes[..bytes.len() - 8].to_vec();
+                    let bytes: Vec<_> = bytes[..bytes.len() - MAGIC.len()].to_vec();
                     return Some(bytes);
                 }
 
