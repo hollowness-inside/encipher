@@ -61,7 +61,7 @@ impl SquareRootMod for UBig {
     }
 }
 
-pub fn get_k_s(mut n: UBig) -> (usize, UBig) {
+fn get_k_s(mut n: UBig) -> (usize, UBig) {
     let mut exponent = 1;
 
     while &n % ubig!(2) == ubig!(0) {
