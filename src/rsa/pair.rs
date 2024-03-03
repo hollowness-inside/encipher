@@ -33,7 +33,7 @@ impl KeyPair for RsaKeyPair {
                 divisor: n,
             },
             private: RsaPrivate {
-                private_exponent: d,
+                exponent: d,
                 prime_1: p,
                 prime_2: q,
             },
