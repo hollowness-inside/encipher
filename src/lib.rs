@@ -7,3 +7,4 @@ pub mod typed;
 
 pub mod rabin;
 pub mod rsa;
+pub mod elgamal;
