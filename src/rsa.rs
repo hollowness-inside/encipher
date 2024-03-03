@@ -73,21 +73,20 @@ impl RsaKeyPair {
         }
     }
 
-    pub fn encrypt<C: TypedContent>(&self, message: C) -> Message {
+    pub fn encrypt<C: TypedContent>(&self, message: C) -> Result<Message> {
         let (content_type, bytes) = message.typed();
 
         let content: Vec<_> = pad_message(&bytes, self.chunk_size)
             .chunks_exact(self.chunk_size)
             .map(|chunk| self.public.encrypt(chunk))
-            .collect::<Result<_>>()
-            .unwrap();
+            .collect::<Result<_>>()?;
 
         let content = Content::Rsa(self.chunk_size, content);
 
-        Message {
+        Ok(Message {
             content_type,
             content,
-        }
+        })
     }
 }
 
