@@ -1,7 +1,8 @@
+use encipher::keypair::KeyPair;
 use encipher::rsa::RsaKeyPair;
 
 fn main() {
-    let key = RsaKeyPair::new(128, 10);
+    let key = RsaKeyPair::generate(128, 10);
     println!("{key:#?}\n");
 
     let encrypted = key.encrypt("Hello World").unwrap();

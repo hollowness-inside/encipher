@@ -1,7 +1,8 @@
+use encipher::keypair::KeyPair;
 use encipher::rabin::RabinKeyPair;
 
 fn main() {
-    let key = RabinKeyPair::new(128, 10);
+    let key = RabinKeyPair::generate(128, 10);
     println!("{key:#?}\n");
 
     let encrypted = key.encrypt("Hello World").unwrap();

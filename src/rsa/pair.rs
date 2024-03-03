@@ -1,5 +1,6 @@
 use ibig::{ubig, UBig};
 
+use crate::keypair::KeyPair;
 use crate::message::{Content, Message};
 use crate::result::{Error, Result};
 use crate::typed::TypedContent;
@@ -14,8 +15,8 @@ pub struct RsaKeyPair {
     pub chunk_size: usize,
 }
 
-impl RsaKeyPair {
-    pub fn new(bit_length: usize, persistence: usize) -> Self {
+impl KeyPair for RsaKeyPair {
+    fn generate(bit_length: usize, persistence: usize) -> Self {
         let p = prime_gen::gen_sized_prime(bit_length, persistence);
         let q = prime_gen::gen_sized_prime(bit_length, persistence);
 
@@ -40,7 +41,7 @@ impl RsaKeyPair {
         }
     }
 
-    pub fn encrypt<C: TypedContent>(&self, message: C) -> Result<Message> {
+    fn encrypt<C: TypedContent>(&self, message: C) -> Result<Message> {
         let (content_type, bytes) = message.typed();
 
         let content: Vec<_> = pad_message(&bytes, self.chunk_size)
@@ -56,7 +57,7 @@ impl RsaKeyPair {
         })
     }
 
-    pub fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
+    fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
         let Content::Rsa(chunk_size, chunks) = message.content else {
             return Err(Error::IncorrectAlgorithm);
         };

@@ -1,7 +1,8 @@
 use encipher::elgamal::ElGamalKeyPair;
+use encipher::keypair::KeyPair;
 
 fn main() {
-    let key = ElGamalKeyPair::new(128, 10);
+    let key = ElGamalKeyPair::generate(128, 10);
     println!("{key:#?}\n");
 
     let out = key.encrypt("Hello World").unwrap();

@@ -3,6 +3,7 @@ use powmod::PowMod;
 use prime_gen::gen_sized_prime;
 use rand::Rng;
 
+use crate::keypair::KeyPair;
 use crate::message::Content;
 use crate::message::Message;
 use crate::result::Error;
@@ -21,8 +22,8 @@ pub struct ElGamalKeyPair {
     pub chunk_size: usize,
 }
 
-impl ElGamalKeyPair {
-    pub fn new(bit_length: usize, persistence: usize) -> Self {
+impl KeyPair for ElGamalKeyPair {
+    fn generate(bit_length: usize, persistence: usize) -> Self {
         let mut rng = rand::thread_rng();
 
         let prime = gen_sized_prime(bit_length, persistence);
@@ -48,7 +49,7 @@ impl ElGamalKeyPair {
         }
     }
 
-    pub fn encrypt<'c, C: TypedContent>(&self, content: C) -> Result<Message> {
+    fn encrypt<'c, C: TypedContent>(&self, content: C) -> Result<Message> {
         let (content_type, bytes) = content.typed();
         let blocks: Vec<_> = pad_message(&bytes, self.chunk_size)
             .chunks_exact(self.chunk_size)
@@ -61,7 +62,7 @@ impl ElGamalKeyPair {
         })
     }
 
-    pub fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
+    fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
         let Content::ElGamal(chunk_size, chunks) = message.content else {
             return Err(Error::IncorrectAlgorithm);
         };

@@ -1,5 +1,6 @@
 use ibig::UBig;
 
+use crate::keypair::KeyPair;
 use crate::message::{Content, Message};
 use crate::result::{Error, Result};
 use crate::typed::TypedContent;
@@ -14,8 +15,8 @@ pub struct RabinKeyPair {
     pub private: RabinPrivate,
 }
 
-impl RabinKeyPair {
-    pub fn new(mut bit_length: usize, persistence: usize) -> Self {
+impl KeyPair for RabinKeyPair {
+    fn generate(mut bit_length: usize, persistence: usize) -> Self {
         bit_length += 8;
 
         let p = gen_prime(bit_length, persistence);
@@ -31,7 +32,7 @@ impl RabinKeyPair {
         }
     }
 
-    pub fn encrypt<'c, C: TypedContent>(&self, content: C) -> Result<Message> {
+    fn encrypt<'c, C: TypedContent>(&self, content: C) -> Result<Message> {
         let (content_type, bytes) = content.typed();
         let rabin = self.public.encrypt(&bytes)?;
 
@@ -41,7 +42,7 @@ impl RabinKeyPair {
         })
     }
 
-    pub fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
+    fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
         let Content::Rabin(content) = message.content else {
             return Err(Error::IncorrectAlgorithm);
         };
