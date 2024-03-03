@@ -98,9 +98,3 @@ impl SqrtExt<UBig> for &UBig {
         None
     }
 }
-
-impl SqrtExt<UBig> for UBig {
-    fn sqrt(self) -> Option<UBig> {
-        (&self).sqrt()
-    }
-}
