@@ -1,44 +1,11 @@
+use ibig::{ubig, UBig};
+
 use crate::message::{Content, Message};
 use crate::result::{Error, Result};
 use crate::typed::TypedContent;
+use crate::utils::{pad_message, unpad_message};
 
-use ibig::{ubig, UBig};
-use powmod::PowMod;
-
-#[derive(Debug)]
-pub struct RsaPublic {
-    pub exponent: UBig,
-    pub divisor: UBig,
-}
-
-impl RsaPublic {
-    pub fn encrypt(&self, bytes: &[u8]) -> Result<UBig> {
-        let message = UBig::from_le_bytes(bytes);
-        if message > self.divisor {
-            return Err(Error::SmallKey);
-        }
-
-        let exp = self.exponent.clone();
-        Ok(message.powmod(exp, &self.divisor))
-    }
-}
-
-#[derive(Debug)]
-pub struct RsaPrivate {
-    pub private_exponent: UBig,
-
-    pub prime_1: UBig,
-    pub prime_2: UBig,
-}
-
-impl RsaPrivate {
-    pub fn decrypt(&self, message: &UBig) -> UBig {
-        let exp = self.private_exponent.clone();
-        let div = &self.prime_1 * &self.prime_2;
-
-        message.powmod(exp, &div)
-    }
-}
+use super::{RsaPrivate, RsaPublic};
 
 #[derive(Debug)]
 pub struct RsaKeyPair {
@@ -101,38 +68,4 @@ impl RsaKeyPair {
 
         Ok(unpad_message(&bytes, chunk_size).to_vec())
     }
-}
-
-pub fn pad_message(bytes: &[u8], block_size: usize) -> Vec<u8> {
-    let len = bytes.len();
-    if len % block_size == 0 {
-        return bytes.to_vec();
-    }
-
-    let pad_len = block_size - (len % block_size);
-    let padding = vec![pad_len as u8; pad_len];
-
-    let mut padded_text = bytes.to_vec();
-    padded_text.extend_from_slice(&padding);
-    padded_text
-}
-
-pub fn unpad_message(bytes: &[u8], block_size: usize) -> &[u8] {
-    if let Some(&pad_len) = bytes.last() {
-        let pad_len = pad_len as usize;
-        let byte_len = bytes.len();
-
-        if pad_len > byte_len {
-            return bytes;
-        }
-
-        let new_len = byte_len - pad_len;
-        if pad_len >= block_size {
-            return bytes;
-        }
-
-        return &bytes[0..new_len];
-    }
-
-    panic!("Empty array");
 }
