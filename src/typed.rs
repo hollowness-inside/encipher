@@ -4,7 +4,16 @@ pub trait TypedContent {
     fn typed(self) -> (ContentType, Vec<u8>);
 }
 
+/// Trait for types that can be converted to a content type and byte representation.
+///
+/// This trait defines a single method `typed` which takes the implementing type as `self`
+/// and returns a tuple containing the associated `ContentType` and the byte representation
+/// of the data as a `Vec<u8>`.
 impl<'s> TypedContent for &'s str {
+    /// Converts the implementing type to a `(ContentType, Vec<u8>)` tuple.
+    ///
+    /// This function returns a tuple containing the associated `ContentType` and the
+    /// byte representation of the data as a `Vec<u8>`.
     #[inline]
     fn typed(self) -> (ContentType, Vec<u8>) {
         (ContentType::Text, self.as_bytes().to_vec())

@@ -15,14 +15,26 @@ use crate::utils::unpad_message;
 use super::ElGamalPrivate;
 use super::ElGamalPublic;
 
+/// A key pair for the ElGamal cryptosystem.
 #[derive(Debug)]
 pub struct ElGamalKeyPair {
+    /// The public key for encryption.
     pub public: ElGamalPublic,
+
+    /// The private key for decryption.
     pub private: ElGamalPrivate,
+
+    /// The chunk size used for message padding and encryption.
     pub chunk_size: usize,
 }
 
 impl KeyPair for ElGamalKeyPair {
+    /// Generates a new ElGamal key pair with the specified bit length and persistence level.
+    ///
+    /// * `bit_length`: The desired bit length for the keys in the pair.
+    /// * `persistence`: The number of iterations for checking numbers for primality.
+    ///
+    /// Returns a newly generated `ElGamalKeyPair` instance.
     fn generate(bit_length: usize, persistence: usize) -> Self {
         let mut rng = rand::thread_rng();
 
@@ -49,6 +61,13 @@ impl KeyPair for ElGamalKeyPair {
         }
     }
 
+    /// Encrypts the provided content using the public key of this key pair.
+    ///
+    /// * `content`: The content to be encrypted, implementing the `TypedContent` trait.
+    ///
+    /// Returns a `Result` containing either:
+    /// * The encrypted message (`Message`) on success.
+    /// * An `Error` indicating the reason for failure.
     fn encrypt<'c, C: TypedContent>(&self, content: C) -> Result<Message> {
         let (content_type, bytes) = content.typed();
         let blocks: Vec<_> = pad_message(&bytes, self.chunk_size)
@@ -62,6 +81,13 @@ impl KeyPair for ElGamalKeyPair {
         })
     }
 
+    /// Decrypts the provided message using the private key of this key pair.
+    ///
+    /// * `message`: The message to be decrypted, represented as a `Message` struct.
+    ///
+    /// Returns a `Result` containing either:
+    /// * The decrypted content as a byte vector (`Vec<u8>`) on success.
+    /// * An `Error` indicating the reason for failure (e.g., incorrect algorithm, decryption error).
     fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
         let Content::ElGamal(chunk_size, chunks) = message.content else {
             return Err(Error::IncorrectAlgorithm);
@@ -77,10 +103,12 @@ impl KeyPair for ElGamalKeyPair {
 }
 
 impl ElGamalKeyPair {
+    /// Creates a new ElGamal key pair with a default bit length and persistence level.
     pub fn new(bit_length: usize) -> Self {
         Self::generate(bit_length, 10)
     }
-    
+
+    /// Sets the chunk size used for message padding and encryption.
     pub fn set_chunk_size(&mut self, chunk_size: usize) {
         self.chunk_size = chunk_size;
     }

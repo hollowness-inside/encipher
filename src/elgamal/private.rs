@@ -1,6 +1,7 @@
 use ibig::UBig;
 use powmod::PowMod;
 
+/// Private key for the ElGamal cryptosystem.
 #[derive(Debug)]
 pub struct ElGamalPrivate {
     pub prime: UBig,
@@ -8,6 +9,12 @@ pub struct ElGamalPrivate {
 }
 
 impl ElGamalPrivate {
+    /// Decrypts an ElGamal ciphertext using the private key.
+    ///
+    /// `message`: A slice containing the two ElGamal ciphertext components (`c1`, `c2`).
+    ///
+    /// Returns the decrypted message (`UBig`) on success.
+    ///
     pub fn decrypt(&self, message: &[UBig; 2]) -> UBig {
         let [c1, c2] = message;
 

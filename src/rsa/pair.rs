@@ -8,14 +8,26 @@ use crate::utils::{pad_message, unpad_message};
 
 use super::{RsaPrivate, RsaPublic};
 
+/// An RSA key pair for encryption and decryption.
 #[derive(Debug)]
 pub struct RsaKeyPair {
+    /// The public key for encryption.
     pub public: RsaPublic,
+
+    /// The private  key for decryption.
     pub private: RsaPrivate,
+
+    /// The chunk size of data for encryption/decryption (in bytes).
     pub chunk_size: usize,
 }
 
 impl KeyPair for RsaKeyPair {
+    /// Generates a new RSA key pair with the specified bit length and persistence level.
+    ///
+    /// * `bit_length`: The desired bit length for the keys in the pair.
+    /// * `persistence`: The number of iterations for checking numbers for primality.
+    ///
+    /// Returns the newly generated `RsaKeyPair` instance.
     fn generate(bit_length: usize, persistence: usize) -> Self {
         let p = prime_gen::gen_sized_prime(bit_length, persistence);
         let q = prime_gen::gen_sized_prime(bit_length, persistence);
@@ -41,6 +53,16 @@ impl KeyPair for RsaKeyPair {
         }
     }
 
+    /// Encrypts the provided content using the public key of this key pair.
+    ///
+    /// * `content`: The content to be encrypted, implementing the `TypedContent` trait.
+    ///
+    /// Returns a `Result` containing either:
+    /// * The encrypted message (`Message`) on success.
+    /// * An `Error` indicating the reason for failure.
+    /// * `Error::SmallKey` if the message is too large for the key.
+    /// * Other potential errors during encryption or padding.
+    ///
     fn encrypt<C: TypedContent>(&self, message: C) -> Result<Message> {
         let (content_type, bytes) = message.typed();
 
@@ -57,6 +79,15 @@ impl KeyPair for RsaKeyPair {
         })
     }
 
+    /// Decrypts the provided message using the private key of this key pair.
+    ///
+    /// * `message`: The message to be decrypted, represented as a `Message` struct.
+    ///
+    /// Returns a `Result` containing either:
+    /// * The decrypted content as a byte vector (`Vec<u8>`) on success.
+    /// * An `Error` indicating the reason for failure:
+    /// * `Error::IncorrectAlgorithm` if the message content type is not `Content::Rsa`.
+    /// * Other potential errors during decryption or unpadding.
     fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
         let Content::Rsa(chunk_size, chunks) = message.content else {
             return Err(Error::IncorrectAlgorithm);
@@ -72,10 +103,12 @@ impl KeyPair for RsaKeyPair {
 }
 
 impl RsaKeyPair {
+    /// Creates a new RSA key pair with a default persistence level of 10.
     pub fn new(bit_length: usize) -> Self {
         Self::generate(bit_length, 10)
     }
 
+    /// Sets the chunk size used for message padding and encryption.
     pub fn set_chunk_size(&mut self, chunk_size: usize) {
         self.chunk_size = chunk_size;
     }

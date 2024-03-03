@@ -9,13 +9,23 @@ use super::private::RabinPrivate;
 use super::public::RabinPublic;
 use super::MAGIC;
 
+/// A key pair for the Rabin cryptosystem.
 #[derive(Debug)]
 pub struct RabinKeyPair {
+    /// The public key for encryption.
     pub public: RabinPublic,
+
+    /// The private key for decryption.
     pub private: RabinPrivate,
 }
 
 impl KeyPair for RabinKeyPair {
+    /// Generates a new Rabin key pair with the specified bit length and persistence level.
+    ///
+    /// * `bit_length`: The desired bit length for the keys in the pair (increased by 8 for internal logic).
+    /// * `persistence`: The number of iterations for checking numbers for primality.
+    ///
+    /// Returns a newly generated `RabinKeyPair` instance.
     fn generate(mut bit_length: usize, persistence: usize) -> Self {
         bit_length += 8;
 
@@ -32,6 +42,13 @@ impl KeyPair for RabinKeyPair {
         }
     }
 
+    /// Encrypts the provided content using the public key of this key pair.
+    ///
+    /// * `content`: The content to be encrypted, implementing the `TypedContent` trait.
+    ///
+    /// Returns a `Result` containing either:
+    /// * The encrypted message (`Message`) on success.
+    /// * An `Error` indicating the reason for failure.
     fn encrypt<'c, C: TypedContent>(&self, content: C) -> Result<Message> {
         let (content_type, bytes) = content.typed();
         let rabin = self.public.encrypt(&bytes)?;
@@ -42,6 +59,14 @@ impl KeyPair for RabinKeyPair {
         })
     }
 
+    /// Decrypts the provided message using the private key of this key pair.
+    ///
+    /// * `message`: The message to be decrypted, represented as a `Message` struct.
+    ///
+    /// Returns a `Result` containing either:
+    /// * The decrypted content as a byte vector (`Vec<u8>`) on success.
+    /// * An `Error::IncorrectAlgorithm` if the message content type is not `Content::Rabin`.
+    /// * An `Error::MessageNotFound` if no valid decryption candidate was found.
     fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
         let Content::Rabin(content) = message.content else {
             return Err(Error::IncorrectAlgorithm);
@@ -76,6 +101,7 @@ fn gen_prime(byte_length: usize, persistence: usize) -> UBig {
 }
 
 impl RabinKeyPair {
+    /// Creates a new Rabin key pair with a default persistence level of 10.
     pub fn new(bit_length: usize) -> Self {
         Self::generate(bit_length, 10)
     }
