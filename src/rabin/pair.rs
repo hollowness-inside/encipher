@@ -1,5 +1,9 @@
 use ibig::UBig;
 
+use crate::message::{Content, Message};
+use crate::result::Result;
+use crate::typed::TypedContent;
+
 use super::private::RabinPrivate;
 use super::public::RabinPublic;
 
@@ -24,6 +28,16 @@ impl RabinKeyPair {
                 prime_2: q,
             },
         }
+    }
+
+    pub fn encrypt<'c, C: TypedContent>(&self, content: C) -> Result<Message> {
+        let (content_type, bytes) = content.typed();
+        let rabin = self.public.encrypt(&bytes)?;
+
+        Ok(Message {
+            content_type,
+            content: Content::Rabin(rabin),
+        })
     }
 }
 

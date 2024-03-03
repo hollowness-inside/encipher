@@ -9,6 +9,7 @@ pub struct Message {
 #[derive(Debug)]
 pub enum Content {
     Rsa(usize, Vec<UBig>),
+    Rabin(UBig)
 }
 
 #[derive(Debug, PartialEq)]
