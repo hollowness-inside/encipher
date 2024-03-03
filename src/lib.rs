@@ -1,14 +1,9 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+use ibig::UBig;
+
+#[derive(Debug)]
+pub struct RsaPublic {
+    pub exponent: UBig,
+    pub divisor: UBig,
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
     }
 }
