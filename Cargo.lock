@@ -22,6 +22,7 @@ dependencies = [
  "jacobi",
  "powmod",
  "prime-gen",
+ "rand",
 ]
 
 [[package]]
