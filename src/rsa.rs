@@ -1,4 +1,4 @@
-use crate::result::{Result, Error};
+use crate::result::{Error, Result};
 
 use ibig::UBig;
 use powmod::PowMod;
