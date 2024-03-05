@@ -23,6 +23,7 @@ dependencies = [
  "powmod",
  "prime-gen",
  "rand",
+ "sqrt",
 ]
 
 [[package]]
@@ -136,6 +137,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
 dependencies = [
  "getrandom",
+]
+
+[[package]]
+name = "sqrt"
+version = "0.1.0"
+source = "git+https://github.com/hollowness-inside/ibig-sqrt-mod#ba1829b82402db5f26cf6ee17e560d4ad054c1a9"
+dependencies = [
+ "ibig",
+ "jacobi",
+ "powmod",
 ]
 
 [[package]]
