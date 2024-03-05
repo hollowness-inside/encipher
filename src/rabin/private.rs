@@ -18,8 +18,6 @@ impl RabinPrivate {
     /// This function takes a `UBig` representing the encrypted message as input and returns an array
     /// of four `IBig` values, which are the possible decryptions due to Rabin's ambiguity.
     ///
-    /// **Note:** It is the responsibility of the caller to determine the correct decrypted message
-    /// based on the context or additional information.
     pub fn decrypt(&self, message: UBig) -> [IBig; 4] {
         let p1: IBig = self.prime_1.clone().into();
         let p2: IBig = self.prime_2.clone().into();
