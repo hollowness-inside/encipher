@@ -1,4 +1,3 @@
-mod sqrt;
 mod utils;
 
 pub mod message;
