@@ -1,5 +1,4 @@
-use encipher::elgamal::ElGamalKeyPair;
-use encipher::keypair::KeyPair;
+use encipher::{elgamal::ElGamalKeyPair, keypair::KeyPair};
 
 fn main() {
     let key = ElGamalKeyPair::generate(128, 10);
