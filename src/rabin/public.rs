@@ -1,9 +1,8 @@
 use ibig::{ubig, UBig};
-use powmod::PowMod;
-
-use crate::result::{Error, Result};
+use ibig_ext::powmod::PowMod;
 
 use super::MAGIC;
+use crate::result::{Error, Result};
 
 /// Public key for the Rabin cryptosystem.
 #[derive(Debug)]

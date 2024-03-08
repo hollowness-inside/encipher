@@ -1,13 +1,11 @@
 use ibig::UBig;
+use ibig_ext::prime_gen::gen_sized_prime;
 
-use crate::keypair::KeyPair;
-use crate::message::{Content, Message};
-use crate::result::{Error, Result};
-use crate::typed::TypedContent;
-
-use super::private::RabinPrivate;
-use super::public::RabinPublic;
-use super::MAGIC;
+use super::{private::RabinPrivate, public::RabinPublic, MAGIC};
+use crate::{keypair::KeyPair,
+            message::{Content, Message},
+            result::{Error, Result},
+            typed::TypedContent};
 
 /// A key pair for the Rabin cryptosystem.
 #[derive(Debug)]
@@ -93,7 +91,7 @@ impl KeyPair for RabinKeyPair {
 
 fn gen_prime(byte_length: usize, persistence: usize) -> UBig {
     loop {
-        let p = prime_gen::gen_sized_prime(byte_length, persistence);
+        let p = gen_sized_prime(byte_length, persistence);
         if &p % 4 == 3 {
             break p;
         }

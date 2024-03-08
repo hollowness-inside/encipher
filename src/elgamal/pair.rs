@@ -1,19 +1,13 @@
 use ibig::ubig;
-use powmod::PowMod;
-use prime_gen::gen_sized_prime;
+use ibig_ext::{powmod::PowMod, prime_gen::gen_sized_prime};
 use rand::Rng;
 
-use crate::keypair::KeyPair;
-use crate::message::Content;
-use crate::message::Message;
-use crate::result::Error;
-use crate::result::Result;
-use crate::typed::TypedContent;
-use crate::utils::pad_message;
-use crate::utils::unpad_message;
-
-use super::ElGamalPrivate;
-use super::ElGamalPublic;
+use super::{ElGamalPrivate, ElGamalPublic};
+use crate::{keypair::KeyPair,
+            message::{Content, Message},
+            result::{Error, Result},
+            typed::TypedContent,
+            utils::{pad_message, unpad_message}};
 
 /// A key pair for the ElGamal cryptosystem.
 #[derive(Debug)]

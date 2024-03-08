@@ -1,5 +1,5 @@
 use ibig::UBig;
-use powmod::PowMod;
+use ibig_ext::powmod::PowMod;
 
 use crate::result::{Error, Result};
 

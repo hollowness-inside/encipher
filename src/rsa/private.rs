@@ -1,5 +1,5 @@
 use ibig::UBig;
-use powmod::PowMod;
+use ibig_ext::powmod::PowMod;
 
 /// Private key for the RSA algorithm.
 #[derive(Debug)]

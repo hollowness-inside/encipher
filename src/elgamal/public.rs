@@ -1,5 +1,5 @@
 use ibig::{ubig, UBig};
-use powmod::PowMod;
+use ibig_ext::powmod::PowMod;
 use rand::Rng;
 
 use crate::result::{Error, Result};

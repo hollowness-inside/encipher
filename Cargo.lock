@@ -19,11 +19,8 @@ name = "encipher"
 version = "0.1.0"
 dependencies = [
  "ibig",
- "jacobi",
- "powmod",
- "prime-gen",
+ "ibig-ext",
  "rand",
- "sqrt",
 ]
 
 [[package]]
@@ -50,12 +47,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "jacobi"
+name = "ibig-ext"
 version = "0.1.0"
-source = "git+https://github.com/hollowness-inside/ibig-jacobi#46d0758d439e82cec86a5446a50185350005c52b"
+source = "git+https://github.com/hollowness-inside/ibig-ext#5419bbc272f54273e9af108281d8d601a1b6248f"
 dependencies = [
  "ibig",
  "num-traits",
+ "rand",
 ]
 
 [[package]]
@@ -74,40 +72,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "powmod"
-version = "0.1.0"
-source = "git+https://github.com/hollowness-inside/ibig-powmod#51f307f14c38c40d16cf5654f500a4af3aa7f9de"
-dependencies = [
- "ibig",
- "num-traits",
-]
-
-[[package]]
 name = "ppv-lite86"
 version = "0.2.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5b40af805b3121feab8a3c29f04d8ad262fa8e0561883e7653e024ae4479e6de"
-
-[[package]]
-name = "primality"
-version = "0.1.0"
-source = "git+https://github.com/hollowness-inside/ibig-primality#b1ea4e7b9d77cd3fd151968faf9619e1f74b40de"
-dependencies = [
- "ibig",
- "jacobi",
- "powmod",
- "rand",
-]
-
-[[package]]
-name = "prime-gen"
-version = "0.1.0"
-source = "git+https://github.com/hollowness-inside/ibig-prime-gen#d4b61918fc394d70648a62ffa6157519c8ccda22"
-dependencies = [
- "ibig",
- "primality",
- "rand",
-]
 
 [[package]]
 name = "rand"
@@ -137,16 +105,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
 dependencies = [
  "getrandom",
-]
-
-[[package]]
-name = "sqrt"
-version = "0.1.0"
-source = "git+https://github.com/hollowness-inside/ibig-sqrt-mod#ba1829b82402db5f26cf6ee17e560d4ad054c1a9"
-dependencies = [
- "ibig",
- "jacobi",
- "powmod",
 ]
 
 [[package]]

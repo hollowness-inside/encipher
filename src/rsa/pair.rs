@@ -1,12 +1,12 @@
 use ibig::{ubig, UBig};
-
-use crate::keypair::KeyPair;
-use crate::message::{Content, Message};
-use crate::result::{Error, Result};
-use crate::typed::TypedContent;
-use crate::utils::{pad_message, unpad_message};
+use ibig_ext::prime_gen::gen_sized_prime;
 
 use super::{RsaPrivate, RsaPublic};
+use crate::{keypair::KeyPair,
+            message::{Content, Message},
+            result::{Error, Result},
+            typed::TypedContent,
+            utils::{pad_message, unpad_message}};
 
 /// An RSA key pair for encryption and decryption.
 #[derive(Debug)]
@@ -29,8 +29,8 @@ impl KeyPair for RsaKeyPair {
     ///
     /// Returns the newly generated `RsaKeyPair` instance.
     fn generate(bit_length: usize, persistence: usize) -> Self {
-        let p = prime_gen::gen_sized_prime(bit_length, persistence);
-        let q = prime_gen::gen_sized_prime(bit_length, persistence);
+        let p = gen_sized_prime(bit_length, persistence);
+        let q = gen_sized_prime(bit_length, persistence);
 
         let n = &p * &q;
         let totient = (&p - 1) * (&q - 1);

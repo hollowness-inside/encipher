@@ -1,5 +1,5 @@
 use ibig::{IBig, UBig};
-use sqrt::SquareRootMod;
+use ibig_ext::sqrt::SquareRootMod;
 
 /// Private key for the Rabin cryptosystem.
 #[derive(Debug)]
