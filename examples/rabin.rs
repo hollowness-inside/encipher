@@ -7,12 +7,6 @@ fn main() {
     let encrypted = key.encrypt("Hello World").unwrap();
     println!("{encrypted:#?}\n");
 
-    let decrypted = key.decrypt(encrypted);
-    println!(
-        "{:#?}\n",
-        decrypted
-            .iter()
-            .map(|x| String::from_utf8_lossy(x))
-            .collect::<Vec<_>>()
-    );
+    let decrypted = key.decrypt(encrypted).unwrap();
+    println!("{:#?}\n", String::from_utf8_lossy(&decrypted));
 }
