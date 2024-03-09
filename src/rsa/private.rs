@@ -20,10 +20,12 @@ impl RsaPrivate {
     ///
     /// This method takes a message as a `UBig` and returns the decrypted message as a `UBig`.
     ///
-    pub fn decrypt(&self, message: &UBig) -> UBig {
+    pub fn decrypt(&self, message: &UBig) -> Vec<u8> {
         let exp = self.exponent.clone();
         let div = &self.prime_1 * &self.prime_2;
 
-        message.powmod(exp, &div)
+        let out = message.powmod(exp, &div);
+        let bytes = out.to_le_bytes();
+        bytes[0..bytes.len() - 1].to_vec()
     }
 }

@@ -22,8 +22,12 @@ impl RsaPublic {
     /// * An `Error` indicating the reason for failure, specifically `Error::SmallKey` if the message is too large for the key.
     ///
     pub fn encrypt(&self, bytes: &[u8]) -> Result<UBig> {
-        let message = UBig::from_le_bytes(bytes);
-        if message > self.divisor {
+        let mut bytes = bytes.to_vec();
+        bytes.push(0x01);
+
+        let message = UBig::from_le_bytes(&bytes);
+
+        if message >= self.divisor {
             return Err(Error::SmallKey);
         }
 
