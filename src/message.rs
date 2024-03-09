@@ -1,5 +1,8 @@
 use ibig::UBig;
 
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
+
 /// A container for encrypted message.
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
