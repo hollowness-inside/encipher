@@ -2,7 +2,7 @@ use ibig::UBig;
 use ibig_ext::powmod::PowMod;
 
 /// Private key for the ElGamal cryptosystem.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ElGamalPrivate {
     pub prime: UBig,

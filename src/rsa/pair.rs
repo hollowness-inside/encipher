@@ -9,7 +9,7 @@ use crate::{keypair::KeyPair,
             utils::{pad_message, unpad_message}};
 
 /// An RSA key pair for encryption and decryption.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct RsaKeyPair {
     /// The public key for encryption.

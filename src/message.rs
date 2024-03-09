@@ -1,7 +1,7 @@
 use ibig::UBig;
 
 /// A container for encrypted message.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Message {
     /// The type of the message content.
@@ -12,7 +12,7 @@ pub struct Message {
 }
 
 /// Different formats for encrypted message content depending on the chosen algorithm.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Content {
     /// RSA encryption content containing the chunk size and encrypted message blocks.
@@ -26,7 +26,7 @@ pub enum Content {
 }
 
 /// Supported content types for messages.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum ContentType {
     Text,

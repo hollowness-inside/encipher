@@ -8,7 +8,7 @@ use crate::{keypair::KeyPair,
             typed::TypedContent};
 
 /// A key pair for the Rabin cryptosystem.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct RabinKeyPair {
     /// The public key for encryption.

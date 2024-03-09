@@ -4,7 +4,7 @@ use ibig_ext::powmod::PowMod;
 use crate::result::{Error, Result};
 
 /// Public key for the RSA algorithm.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct RsaPublic {
     /// Public exponent used for encryption.

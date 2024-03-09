@@ -10,7 +10,7 @@ use crate::{keypair::KeyPair,
             utils::{pad_message, unpad_message}};
 
 /// A key pair for the ElGamal cryptosystem.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ElGamalKeyPair {
     /// The public key for encryption.

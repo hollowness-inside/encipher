@@ -2,7 +2,7 @@ use ibig::{IBig, UBig};
 use ibig_ext::sqrt::SquareRootMod;
 
 /// Private key for the Rabin cryptosystem.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct RabinPrivate {
     /// First prime factor of the public modulus.
