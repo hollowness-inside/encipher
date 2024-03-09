@@ -13,7 +13,7 @@ pub struct Message {
 
 /// Different formats for encrypted message content depending on the chosen algorithm.
 #[derive(Debug)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Content {
     /// RSA encryption content containing the chunk size and encrypted message blocks.
     Rsa(usize, Vec<UBig>),
@@ -27,7 +27,7 @@ pub enum Content {
 
 /// Supported content types for messages.
 #[derive(Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum ContentType {
     Text,
     Bytes,
