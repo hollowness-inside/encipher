@@ -68,7 +68,7 @@ impl KeyPair for RsaKeyPair {
         let (content_type, bytes) = message.typed();
 
         let content: Vec<_> = pad_message(&bytes, self.chunk_size)
-            .chunks_exact(self.chunk_size - 1)
+            .chunks(self.chunk_size - 1)
             .map(|chunk| self.public.encrypt(chunk))
             .collect::<Result<_>>()?;
 
