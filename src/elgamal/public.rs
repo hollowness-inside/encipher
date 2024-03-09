@@ -6,7 +6,7 @@ use crate::result::{Error, Result};
 
 /// Public key for the ElGamal cryptosystem.
 #[derive(Debug)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ElGamalPublic {
     pub prime: UBig,
     pub alpha: UBig,
