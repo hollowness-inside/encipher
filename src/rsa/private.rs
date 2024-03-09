@@ -3,6 +3,7 @@ use ibig_ext::powmod::PowMod;
 
 /// Private key for the RSA algorithm.
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct RsaPrivate {
     /// Private exponent used for decryption.
     pub exponent: UBig,

@@ -11,6 +11,7 @@ use crate::{keypair::KeyPair,
 
 /// A key pair for the ElGamal cryptosystem.
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct ElGamalKeyPair {
     /// The public key for encryption.
     pub public: ElGamalPublic,

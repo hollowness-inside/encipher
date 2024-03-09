@@ -5,6 +5,7 @@ use crate::result::{Error, Result};
 
 /// Public key for the RSA algorithm.
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct RsaPublic {
     /// Public exponent used for encryption.
     pub exponent: UBig,

@@ -10,6 +10,7 @@ use crate::{keypair::KeyPair,
 
 /// An RSA key pair for encryption and decryption.
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct RsaKeyPair {
     /// The public key for encryption.
     pub public: RsaPublic,

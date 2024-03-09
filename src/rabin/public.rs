@@ -6,6 +6,7 @@ use crate::result::{Error, Result};
 
 /// Public key for the Rabin cryptosystem.
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct RabinPublic {
     /// Public modulus used for encryption.
     pub divisor: UBig,
