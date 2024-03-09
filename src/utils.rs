@@ -8,17 +8,21 @@
 /// `bytes` are returned without modification.
 ///
 pub(crate) fn pad_message(bytes: &[u8], block_size: usize) -> Vec<u8> {
+    let mut bytes = bytes.to_vec();
     let len = bytes.len();
+
     if len % block_size == 0 {
+        bytes.extend(vec![0; block_size]);
         return bytes.to_vec();
     }
 
     let pad_len = block_size - (len % block_size);
-    let padding = vec![pad_len as u8; pad_len];
+    let padding = vec![0; pad_len];
 
-    let mut padded_text = bytes.to_vec();
-    padded_text.extend_from_slice(&padding);
-    padded_text
+    bytes.extend(padding);
+    bytes.extend(vec![0; block_size - 8]);
+    bytes.extend(pad_len.to_le_bytes());
+    bytes
 }
 
 /// Unpads a message that has been padded to a multiple of the block size.
@@ -35,21 +39,11 @@ pub(crate) fn pad_message(bytes: &[u8], block_size: usize) -> Vec<u8> {
 /// This function panics if the input `bytes` is empty.
 ///
 pub(crate) fn unpad_message(bytes: &[u8], block_size: usize) -> &[u8] {
-    if let Some(&pad_len) = bytes.last() {
-        let pad_len = pad_len as usize;
-        let byte_len = bytes.len();
+    let len = bytes.len();
+    let pad_len = {
+        let bytes: [u8; 8] = bytes[len-8..len].try_into().unwrap();
+        usize::from_le_bytes(bytes)
+    };
 
-        if pad_len > byte_len {
-            return bytes;
-        }
-
-        let new_len = byte_len - pad_len;
-        if pad_len >= block_size {
-            return bytes;
-        }
-
-        return &bytes[0..new_len];
-    }
-
-    panic!("Empty array");
+    &bytes[0..len - block_size - pad_len]
 }
