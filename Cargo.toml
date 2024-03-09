@@ -9,3 +9,7 @@ edition = "2021"
 ibig = "0.3.6"
 ibig-ext = { git = "https://github.com/hollowness-inside/ibig-ext", version = "0.1.0", features = ["primegen", "sqrt", "powmod", "jacobi", "primality"] }
 rand = "0.8.5"
+serde = { version = "1.0.197", optional = true }
+
+[features]
+serde = ["dep:serde"]
