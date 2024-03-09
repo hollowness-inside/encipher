@@ -1,11 +1,8 @@
 use ibig::UBig;
 
-#[cfg(feature = "serde")]
-use serde::{Serialize, Deserialize};
-
 /// A container for encrypted message.
 #[derive(Debug)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Message {
     /// The type of the message content.
     pub content_type: ContentType,
