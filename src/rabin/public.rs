@@ -26,7 +26,6 @@ impl RabinPublic {
         message.extend(MAGIC);
 
         let message = UBig::from_le_bytes(&message);
-
         if message >= self.divisor {
             return Err(Error::SmallKey);
         }

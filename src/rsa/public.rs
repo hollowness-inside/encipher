@@ -26,7 +26,6 @@ impl RsaPublic {
         bytes.push(0x01);
 
         let message = UBig::from_le_bytes(&bytes);
-
         if message >= self.divisor {
             return Err(Error::SmallKey);
         }
