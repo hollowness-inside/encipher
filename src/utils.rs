@@ -10,17 +10,17 @@
 pub(crate) fn pad_message(bytes: &[u8], block_size: usize) -> Vec<u8> {
     let mut bytes = bytes.to_vec();
     let len = bytes.len();
-    
+
     if len % block_size == 0 {
         bytes.extend(vec![0; block_size]);
         return bytes;
     }
-    
+
     let pad_len = block_size - (len % block_size);
     let padding = vec![0; pad_len];
-    
+
     bytes.reserve(pad_len + block_size);
-    
+
     bytes.extend(padding);
     bytes.extend(vec![0; block_size - 8]);
     bytes.extend(pad_len.to_le_bytes());
@@ -43,7 +43,7 @@ pub(crate) fn pad_message(bytes: &[u8], block_size: usize) -> Vec<u8> {
 pub(crate) fn unpad_message(bytes: &[u8], block_size: usize) -> &[u8] {
     let len = bytes.len();
     let pad_len = {
-        let bytes: [u8; 8] = bytes[len-8..len].try_into().unwrap();
+        let bytes: [u8; 8] = bytes[len - 8..len].try_into().unwrap();
         usize::from_le_bytes(bytes)
     };
 
