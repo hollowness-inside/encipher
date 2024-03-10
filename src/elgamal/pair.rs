@@ -90,7 +90,7 @@ impl KeyPair for ElGamalKeyPair {
 
         let bytes: Vec<u8> = chunks
             .iter()
-            .flat_map(|chunk| self.private.decrypt(chunk).to_le_bytes())
+            .flat_map(|chunk| self.private.decrypt(chunk))
             .collect();
 
         Ok(unpad_message(&bytes, chunk_size).to_vec())
