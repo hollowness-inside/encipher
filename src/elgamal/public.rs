@@ -21,7 +21,10 @@ impl ElGamalPublic {
     /// * An `Error::SmallKey` if the message is too large for the key.
     ///
     pub fn encrypt(&self, bytes: &[u8]) -> Result<[UBig; 2]> {
-        let message = UBig::from_le_bytes(bytes);
+        let mut bytes = bytes.to_vec();
+        bytes.push(0x01);
+
+        let message = UBig::from_le_bytes(&bytes);
         if message > self.prime {
             return Err(Error::SmallKey);
         }
