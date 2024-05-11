@@ -1,5 +1,3 @@
-use std::io::Read;
-
 use ibig::UBig;
 use ibig_ext::powmod::PowMod;
 

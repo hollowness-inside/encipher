@@ -1,7 +1,6 @@
 use std::vec;
 
-use ibig::{ops::{Abs, UnsignedAbs},
-           IBig, UBig};
+use ibig::UBig;
 use ibig_ext::sqrt::SquareRootMod;
 
 use crate::keypair::PrivateKey;
