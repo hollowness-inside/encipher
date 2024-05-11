@@ -23,4 +23,9 @@ impl PublicKey for ElGamalPublic {
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
         elgamal_encrypt(bytes, &self.prime, &self.alpha, &self.beta)
     }
+
+    #[inline]
+    fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
+        unimplemented!()        
+    }
 }

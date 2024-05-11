@@ -2,6 +2,7 @@ use crate::{message::Message, result::Result, typed::TypedContent};
 
 pub trait PublicKey {
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>>;
+    fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>>;
 }
 pub trait PrivateKey {
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>>;

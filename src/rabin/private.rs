@@ -56,7 +56,6 @@ impl PrivateKey for RabinPrivate {
     }
 
     fn encrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
-        let divisor = &self.prime_1 * &self.prime_2;
-        rabin_encrypt(message, &divisor)
+        unimplemented!()
     }
 }
