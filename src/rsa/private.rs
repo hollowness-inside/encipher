@@ -1,8 +1,7 @@
 use ibig::UBig;
 use ibig_ext::powmod::PowMod;
 
-use crate::keypair::PrivateKey;
-use crate::result::Result;
+use crate::{keypair::PrivateKey, result::Result};
 
 /// Private key for the RSA algorithm.
 #[derive(Debug, Clone)]
@@ -30,7 +29,7 @@ impl PrivateKey for RsaPrivate {
         let message = UBig::from_be_bytes(message);
         let out = message.powmod(exp, &div);
         let bytes = out.to_le_bytes();
-        
+
         Ok(bytes[0..bytes.len() - 1].to_vec())
     }
 }

@@ -1,10 +1,9 @@
 use ibig::UBig;
 use ibig_ext::sqrt::SquareRootMod;
 
+use super::MAGIC;
 use crate::{keypair::PrivateKey,
             result::{Error, Result}};
-
-use super::MAGIC;
 
 /// Private key for the Rabin cryptosystem.
 #[derive(Debug, Clone)]
@@ -36,14 +35,9 @@ impl PrivateKey for RabinPrivate {
             .clone()
             .square_root_mod(&self.prime_1)
             .expect("No root")
-            .0
-            .into();
+            .0;
 
-        let mp2: UBig = message
-            .square_root_mod(&self.prime_2)
-            .expect("No root")
-            .0
-            .into();
+        let mp2: UBig = message.square_root_mod(&self.prime_2).expect("No root").0;
 
         let n = &p1 * &p2;
         let m1: UBig = (&u * &p1 * &mp2 + &v * &p2 * &mp1) % &n;
@@ -58,6 +52,6 @@ impl PrivateKey for RabinPrivate {
             }
         }
 
-        return Err(Error::MessageNotFound);
+        Err(Error::MessageNotFound)
     }
 }

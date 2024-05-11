@@ -1,8 +1,9 @@
 use ibig::UBig;
 use ibig_ext::powmod::PowMod;
 
-use crate::result::Error;
-use crate::{keypair::PrivateKey, result::Result, utils::unmarshal_bytes};
+use crate::{keypair::PrivateKey,
+            result::{Error, Result},
+            utils::unmarshal_bytes};
 
 /// Private key for the ElGamal cryptosystem.
 #[derive(Debug, Clone)]
@@ -32,7 +33,7 @@ impl PrivateKey for ElGamalPrivate {
 
         let message = (c2 * c1_inv.powmod(self.key.clone(), &self.prime)) % &self.prime;
         let bytes = message.to_le_bytes();
-        
+
         Ok(bytes[0..bytes.len() - 1].to_vec())
     }
 }
