@@ -16,7 +16,7 @@ pub struct Message {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Content {
     /// RSA encryption content containing the chunk size and encrypted message blocks.
-    Rsa(usize, Vec<UBig>),
+    Rsa(usize, Vec<u8>),
 
     /// ElGamal encryption content containing the chunk size and ciphertext pairs.
     ElGamal(usize, Vec<[UBig; 2]>),

@@ -22,9 +22,6 @@ pub struct RsaKeyPair {
     pub chunk_size: usize,
 }
 
-impl PublicKey for RsaPublic {}
-impl PrivateKey for RsaPrivate {}
-
 impl KeyPair for RsaKeyPair {
     type Public = RsaPublic;
     type Private = RsaPrivate;
@@ -72,11 +69,12 @@ impl KeyPair for RsaKeyPair {
     fn encrypt<C: TypedContent>(&self, message: C) -> Result<Message> {
         let (content_type, bytes) = message.typed();
 
-        let content: Vec<_> = pad_message(&bytes, self.chunk_size)
+        let content: Vec<Vec<_>> = pad_message(&bytes, self.chunk_size)
             .chunks(self.chunk_size - 1)
             .map(|chunk| self.public.encrypt(chunk))
             .collect::<Result<_>>()?;
 
+        let content = content.into_iter().flatten().collect();
         let content = Content::Rsa(self.chunk_size, content);
 
         Ok(Message {
@@ -100,7 +98,7 @@ impl KeyPair for RsaKeyPair {
         };
 
         let bytes: Vec<u8> = chunks
-            .iter()
+            .chunks_exact(chunk_size)
             .flat_map(|chunk| self.private.decrypt(chunk))
             .collect();
 
