@@ -72,7 +72,8 @@ pub(crate) fn unmarshal_bytes(raw_bytes: &[u8]) -> Vec<Vec<u8>> {
         offset += 8;
 
         let bytes = raw_bytes[offset..offset + len].to_vec();
-        result.push(bytes)
+        result.push(bytes);
+        offset += len;
     }
 
     result
