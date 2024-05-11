@@ -49,3 +49,31 @@ pub(crate) fn unpad_message(bytes: &[u8], block_size: usize) -> &[u8] {
 
     &bytes[0..len - block_size - pad_len]
 }
+
+pub(crate) fn marshal_bytes(bytes: &Vec<Vec<u8>>) -> Vec<u8> {
+    let byte_length = bytes.iter().fold(0, |acc, e| acc + e.len());
+    let mut result = Vec::with_capacity(byte_length + bytes.len() * 8);
+
+    for b in bytes {
+        let len = b.len() as u64;
+        result.extend(len.to_be_bytes());
+        result.extend(b);
+    }
+
+    result
+}
+
+pub(crate) fn unmarshal_bytes(raw_bytes: &[u8]) -> Vec<Vec<u8>> {
+    let mut result = Vec::with_capacity(raw_bytes.len());
+    
+    let mut offset = 0;
+    while offset < raw_bytes.len() {
+        let len = u64::from_be_bytes(raw_bytes[offset..offset + 8].try_into().unwrap()) as usize;
+        offset += 8;
+
+        let bytes = raw_bytes[offset..offset + len].to_vec();
+        result.push(bytes)
+    }
+
+    result
+}
