@@ -19,6 +19,7 @@ impl PublicKey for ElGamalPublic {
     /// * A tuple of two `UBig` values on success, representing the encrypted message (`c1`, `c2`).
     /// * An `Error::SmallKey` if the message is too large for the key.
     ///
+    #[inline]
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
         elgamal_encrypt(bytes, &self.prime, &self.alpha, &self.beta)
     }
