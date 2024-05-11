@@ -23,7 +23,6 @@ pub struct ElGamalKeyPair {
     pub chunk_size: usize,
 }
 
-
 impl KeyPair for ElGamalKeyPair {
     type Public = ElGamalPublic;
     type Private = ElGamalPrivate;

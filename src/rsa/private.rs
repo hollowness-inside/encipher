@@ -30,5 +30,5 @@ impl PrivateKey for RsaPrivate {
         let out = message.powmod(exp, &div);
         let bytes = out.to_le_bytes();
         bytes[0..bytes.len() - 1].to_vec()
-    }   
+    }
 }

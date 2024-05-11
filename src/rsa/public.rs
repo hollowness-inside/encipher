@@ -1,8 +1,8 @@
 use ibig::UBig;
 use ibig_ext::powmod::PowMod;
 
-use crate::keypair::PublicKey;
-use crate::result::{Error, Result};
+use crate::{keypair::PublicKey,
+            result::{Error, Result}};
 
 /// Public key for the RSA algorithm.
 #[derive(Debug, Clone)]

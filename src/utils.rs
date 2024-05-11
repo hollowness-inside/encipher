@@ -65,7 +65,7 @@ pub(crate) fn marshal_bytes(bytes: &Vec<Vec<u8>>) -> Vec<u8> {
 
 pub(crate) fn unmarshal_bytes(raw_bytes: &[u8]) -> Vec<Vec<u8>> {
     let mut result = Vec::with_capacity(raw_bytes.len());
-    
+
     let mut offset = 0;
     while offset < raw_bytes.len() {
         let len = u64::from_be_bytes(raw_bytes[offset..offset + 8].try_into().unwrap()) as usize;

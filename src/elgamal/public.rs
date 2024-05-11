@@ -2,9 +2,9 @@ use ibig::{ubig, UBig};
 use ibig_ext::powmod::PowMod;
 use rand::Rng;
 
-use crate::keypair::PublicKey;
-use crate::result::{Error, Result};
-use crate::utils::marshal_bytes;
+use crate::{keypair::PublicKey,
+            result::{Error, Result},
+            utils::marshal_bytes};
 
 /// Public key for the ElGamal cryptosystem.
 #[derive(Debug, Clone)]
