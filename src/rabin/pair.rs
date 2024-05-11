@@ -2,7 +2,7 @@ use ibig::UBig;
 use ibig_ext::prime_gen::gen_sized_prime;
 
 use super::{private::RabinPrivate, public::RabinPublic, MAGIC};
-use crate::{keypair::KeyPair,
+use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
             message::{Content, Message},
             result::{Error, Result},
             typed::TypedContent};
@@ -12,13 +12,18 @@ use crate::{keypair::KeyPair,
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct RabinKeyPair {
     /// The public key for encryption.
-    pub public: RabinPublic,
+    public: RabinPublic,
 
     /// The private key for decryption.
-    pub private: RabinPrivate,
+    private: RabinPrivate,
 }
 
+impl PublicKey for RabinPublic {}
+impl PrivateKey for RabinPrivate {}
+
 impl KeyPair for RabinKeyPair {
+    type Public = RabinPublic;
+    type Private = RabinPrivate;
     /// Generates a new Rabin key pair with the specified bit length and persistence level.
     ///
     /// * `bit_length`: The desired bit length for the keys in the pair (increased by 8 for internal logic).
@@ -87,6 +92,14 @@ impl KeyPair for RabinKeyPair {
             });
 
         decrypted.ok_or(Error::MessageNotFound)
+    }
+
+    fn public(&self) -> &Self::Public {
+        &self.public
+    }
+
+    fn private(&self) -> &Self::Private {
+        &self.private
     }
 }
 

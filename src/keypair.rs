@@ -1,7 +1,12 @@
 use crate::{message::Message, result::Result, typed::TypedContent};
 
+pub trait PublicKey {}
+pub trait PrivateKey {}
+
 /// Trait defining the common functionalities of a public-private cryptography key pair.
 pub trait KeyPair {
+    type Public: PublicKey;
+    type Private: PrivateKey;
     /// Generates a new key pair with the specified key bit length and persistence level.
     ///
     /// * `bit_length`: The desired bit length for the keys in the pair.
@@ -23,4 +28,7 @@ pub trait KeyPair {
     ///
     /// Returns a `Result` containing either the decrypted content as a byte vector (`Vec<u8>`) on success or an error (`Error`) indicating the reason for failure.
     fn decrypt(&self, message: Message) -> Result<Vec<u8>>;
+
+    fn public(&self) -> &Self::Public;
+    fn private(&self) -> &Self::Private;
 }

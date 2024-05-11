@@ -2,7 +2,7 @@ use ibig::{ubig, UBig};
 use ibig_ext::prime_gen::gen_sized_prime;
 
 use super::{RsaPrivate, RsaPublic};
-use crate::{keypair::KeyPair,
+use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
             message::{Content, Message},
             result::{Error, Result},
             typed::TypedContent,
@@ -13,16 +13,21 @@ use crate::{keypair::KeyPair,
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct RsaKeyPair {
     /// The public key for encryption.
-    pub public: RsaPublic,
+    public: RsaPublic,
 
     /// The private  key for decryption.
-    pub private: RsaPrivate,
+    private: RsaPrivate,
 
     /// The chunk size of data for encryption/decryption (in bytes).
     pub chunk_size: usize,
 }
 
+impl PublicKey for RsaPublic {}
+impl PrivateKey for RsaPrivate {}
+
 impl KeyPair for RsaKeyPair {
+    type Public = RsaPublic;
+    type Private = RsaPrivate;
     /// Generates a new RSA key pair with the specified bit length and persistence level.
     ///
     /// * `bit_length`: The desired bit length for the keys in the pair.
@@ -100,6 +105,14 @@ impl KeyPair for RsaKeyPair {
             .collect();
 
         Ok(unpad_message(&bytes, chunk_size).to_vec())
+    }
+
+    fn public(&self) -> &Self::Public {
+        &self.public
+    }
+
+    fn private(&self) -> &Self::Private {
+        &self.private
     }
 }
 

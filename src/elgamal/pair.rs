@@ -3,7 +3,7 @@ use ibig_ext::{powmod::PowMod, prime_gen::gen_sized_prime};
 use rand::Rng;
 
 use super::{ElGamalPrivate, ElGamalPublic};
-use crate::{keypair::KeyPair,
+use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
             message::{Content, Message},
             result::{Error, Result},
             typed::TypedContent,
@@ -14,16 +14,21 @@ use crate::{keypair::KeyPair,
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ElGamalKeyPair {
     /// The public key for encryption.
-    pub public: ElGamalPublic,
+    public: ElGamalPublic,
 
     /// The private key for decryption.
-    pub private: ElGamalPrivate,
+    private: ElGamalPrivate,
 
     /// The chunk size used for message padding and encryption.
     pub chunk_size: usize,
 }
 
+impl PublicKey for ElGamalPublic {}
+impl PrivateKey for ElGamalPrivate {}
+
 impl KeyPair for ElGamalKeyPair {
+    type Public = ElGamalPublic;
+    type Private = ElGamalPrivate;
     /// Generates a new ElGamal key pair with the specified bit length and persistence level.
     ///
     /// * `bit_length`: The desired bit length for the keys in the pair.
@@ -94,6 +99,14 @@ impl KeyPair for ElGamalKeyPair {
             .collect();
 
         Ok(unpad_message(&bytes, chunk_size).to_vec())
+    }
+
+    fn public(&self) -> &Self::Public {
+        &self.public
+    }
+
+    fn private(&self) -> &Self::Private {
+        &self.private
     }
 }
 
