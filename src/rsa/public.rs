@@ -1,8 +1,7 @@
 use ibig::UBig;
-use ibig_ext::powmod::PowMod;
 
-use crate::{keypair::PublicKey,
-            result::{Error, Result}};
+use super::basic::rsa_encrypt;
+use crate::{keypair::PublicKey, result::Result};
 
 /// Public key for the RSA algorithm.
 #[derive(Debug, Clone)]
@@ -22,17 +21,8 @@ impl PublicKey for RsaPublic {
     /// * The encrypted message on success.
     /// * An `Error` indicating the reason for failure, specifically `Error::SmallKey` if the message is too large for the key.
     ///
+    #[inline]
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
-        let mut bytes = bytes.to_vec();
-        bytes.push(0x01);
-
-        let message = UBig::from_le_bytes(&bytes);
-        if message >= self.divisor {
-            return Err(Error::SmallKey);
-        }
-
-        let exp = self.exponent.clone();
-        let message = message.powmod(exp, &self.divisor);
-        Ok(message.to_be_bytes())
+        rsa_encrypt(bytes, &self.exponent, &self.divisor)
     }
 }

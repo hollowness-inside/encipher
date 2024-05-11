@@ -5,6 +5,7 @@ pub trait PublicKey {
 }
 pub trait PrivateKey {
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>>;
+    fn encrypt(&self, message: &[u8]) -> Result<Vec<u8>>;
 }
 
 /// Trait defining the common functionalities of a public-private cryptography key pair.

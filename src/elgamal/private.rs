@@ -36,4 +36,8 @@ impl PrivateKey for ElGamalPrivate {
 
         Ok(bytes[0..bytes.len() - 1].to_vec())
     }
+
+    fn encrypt(&self, _message: &[u8]) -> Result<Vec<u8>> {
+        unimplemented!()
+    }
 }

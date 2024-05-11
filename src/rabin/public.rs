@@ -1,9 +1,7 @@
-use ibig::{ubig, UBig};
-use ibig_ext::powmod::PowMod;
+use ibig::UBig;
 
-use super::MAGIC;
-use crate::{keypair::PublicKey,
-            result::{Error, Result}};
+use super::basic::rabin_encrypt;
+use crate::{keypair::PublicKey, result::Result};
 
 /// Public key for the Rabin cryptosystem.
 #[derive(Debug, Clone)]
@@ -22,16 +20,9 @@ impl PublicKey for RabinPublic {
     ///
     /// * **Note:** This function performs Rabin encryption with message padding using the constant `MAGIC`.
     /// The specific value of `MAGIC` is defined in the `MAGIC` constant.
+    ///
+    #[inline]
     fn encrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
-        let mut message = message.to_vec();
-        message.extend(MAGIC);
-
-        let message = UBig::from_le_bytes(&message);
-        if message >= self.divisor {
-            return Err(Error::SmallKey);
-        }
-
-        let message = message.powmod(ubig!(2), &self.divisor).to_be_bytes();
-        Ok(message)
+        rabin_encrypt(message, &self.divisor)
     }
 }

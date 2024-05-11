@@ -1,7 +1,7 @@
 use ibig::UBig;
 use ibig_ext::sqrt::SquareRootMod;
 
-use super::MAGIC;
+use super::{basic::rabin_encrypt, MAGIC};
 use crate::{keypair::PrivateKey,
             result::{Error, Result}};
 
@@ -53,5 +53,10 @@ impl PrivateKey for RabinPrivate {
         }
 
         Err(Error::MessageNotFound)
+    }
+
+    fn encrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
+        let divisor = &self.prime_1 * &self.prime_2;
+        rabin_encrypt(message, &divisor)
     }
 }
