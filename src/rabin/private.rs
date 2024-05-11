@@ -1,9 +1,10 @@
-use std::vec;
-
 use ibig::UBig;
 use ibig_ext::sqrt::SquareRootMod;
 
-use crate::keypair::PrivateKey;
+use crate::{keypair::PrivateKey,
+            result::{Error, Result}};
+
+use super::MAGIC;
 
 /// Private key for the Rabin cryptosystem.
 #[derive(Debug, Clone)]
@@ -22,7 +23,7 @@ impl PrivateKey for RabinPrivate {
     /// This function takes a `UBig` representing the encrypted message as input and returns an array
     /// of four `IBig` values, which are the possible decryptions due to Rabin's ambiguity.
     ///
-    fn decrypt(&self, message: &[u8]) -> Vec<u8> {
+    fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         let p1 = self.prime_1.clone();
         let p2 = self.prime_2.clone();
 
@@ -52,11 +53,11 @@ impl PrivateKey for RabinPrivate {
 
         for m in [m1, m2, m3, m4] {
             let m = m.to_be_bytes();
-            if m.ends_with(b"RaBiN") {
-                return m;
+            if m.ends_with(MAGIC) {
+                return Ok(m);
             }
         }
 
-        return vec![];
+        return Err(Error::MessageNotFound);
     }
 }

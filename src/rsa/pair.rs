@@ -98,10 +98,12 @@ impl KeyPair for RsaKeyPair {
         };
 
         let chunks = unmarshal_bytes(&raw_bytes);
-
         let bytes: Vec<u8> = chunks
             .into_iter()
-            .flat_map(|chunk| self.private.decrypt(&chunk))
+            .map(|chunk| self.private.decrypt(&chunk))
+            .collect::<Result<Vec<_>>>()?
+            .into_iter()
+            .flatten()
             .collect();
 
         Ok(unpad_message(&bytes, chunk_size).to_vec())

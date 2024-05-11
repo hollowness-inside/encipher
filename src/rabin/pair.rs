@@ -1,7 +1,7 @@
 use ibig::UBig;
 use ibig_ext::prime_gen::gen_sized_prime;
 
-use super::{private::RabinPrivate, public::RabinPublic, MAGIC};
+use super::{private::RabinPrivate, public::RabinPublic};
 use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
             message::{Content, Message},
             result::{Error, Result},
@@ -73,22 +73,7 @@ impl KeyPair for RabinKeyPair {
             return Err(Error::IncorrectAlgorithm);
         };
 
-        let decrypted: Option<Vec<u8>> =
-            self.private.decrypt(&content).into_iter().find_map(|msg| {
-                let Ok(msg) = TryInto::<UBig>::try_into(msg) else {
-                    return None;
-                };
-
-                let bytes = msg.to_le_bytes();
-                if bytes.ends_with(MAGIC) {
-                    let bytes: Vec<_> = bytes[..bytes.len() - MAGIC.len()].to_vec();
-                    return Some(bytes);
-                }
-
-                None
-            });
-
-        decrypted.ok_or(Error::MessageNotFound)
+        self.private.decrypt(&content)
     }
 
     fn public(&self) -> &Self::Public {
