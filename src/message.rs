@@ -22,7 +22,7 @@ pub enum Content {
     ElGamal(usize, Vec<[UBig; 2]>),
 
     /// Rabin encryption content containing the single Rabin ciphertext.
-    Rabin(UBig),
+    Rabin(Vec<u8>),
 }
 
 /// Supported content types for messages.

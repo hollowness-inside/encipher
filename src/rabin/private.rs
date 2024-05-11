@@ -1,5 +1,10 @@
-use ibig::{IBig, UBig};
+use std::vec;
+
+use ibig::{ops::{Abs, UnsignedAbs},
+           IBig, UBig};
 use ibig_ext::sqrt::SquareRootMod;
+
+use crate::keypair::PrivateKey;
 
 /// Private key for the Rabin cryptosystem.
 #[derive(Debug, Clone)]
@@ -12,37 +17,47 @@ pub struct RabinPrivate {
     pub prime_2: UBig,
 }
 
-impl RabinPrivate {
+impl PrivateKey for RabinPrivate {
     /// Decrypts a Rabin-encrypted message using the private key.
     ///
     /// This function takes a `UBig` representing the encrypted message as input and returns an array
     /// of four `IBig` values, which are the possible decryptions due to Rabin's ambiguity.
     ///
-    pub fn decrypt(&self, message: UBig) -> [IBig; 4] {
-        let p1: IBig = self.prime_1.clone().into();
-        let p2: IBig = self.prime_2.clone().into();
+    fn decrypt(&self, message: &[u8]) -> Vec<u8> {
+        let p1 = self.prime_1.clone();
+        let p2 = self.prime_2.clone();
 
         let (_, u, v) = self.prime_1.extended_gcd(&self.prime_2);
+        let message = UBig::from_be_bytes(message);
+        let u = UBig::try_from(u).expect("Cannot convert u to UBig");
+        let v = UBig::try_from(v).expect("Cannot convert v to UBig");
 
-        let mp1: IBig = message
+        let mp1: UBig = message
             .clone()
             .square_root_mod(&self.prime_1)
             .expect("No root")
             .0
             .into();
 
-        let mp2: IBig = message
+        let mp2: UBig = message
             .square_root_mod(&self.prime_2)
             .expect("No root")
             .0
             .into();
 
         let n = &p1 * &p2;
-        let m1 = (&u * &p1 * &mp2 + &v * &p2 * &mp1) % &n;
-        let m2 = &n - &m1;
-        let m3 = (&u * &p1 * &mp2 - &v * &p2 * &mp1) % &n;
-        let m4 = &n - &m3;
+        let m1: UBig = (&u * &p1 * &mp2 + &v * &p2 * &mp1) % &n;
+        let m2: UBig = &n - &m1;
+        let m3: UBig = (&u * &p1 * &mp2 - &v * &p2 * &mp1) % &n;
+        let m4: UBig = &n - &m3;
 
-        [m1, m2, m3, m4]
+        for m in [m1, m2, m3, m4] {
+            let m = m.to_be_bytes();
+            if m.ends_with(b"rabin") {
+                return m;
+            }
+        }
+
+        return vec![];
     }
 }

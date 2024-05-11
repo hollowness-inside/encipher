@@ -18,9 +18,6 @@ pub struct RabinKeyPair {
     private: RabinPrivate,
 }
 
-impl PublicKey for RabinPublic {}
-impl PrivateKey for RabinPrivate {}
-
 impl KeyPair for RabinKeyPair {
     type Public = RabinPublic;
     type Private = RabinPrivate;
@@ -77,7 +74,7 @@ impl KeyPair for RabinKeyPair {
         };
 
         let decrypted: Option<Vec<u8>> =
-            self.private.decrypt(content).into_iter().find_map(|msg| {
+            self.private.decrypt(&content).into_iter().find_map(|msg| {
                 let Ok(msg) = TryInto::<UBig>::try_into(msg) else {
                     return None;
                 };
