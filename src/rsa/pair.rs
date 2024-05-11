@@ -6,7 +6,7 @@ use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
             message::{Content, Message},
             result::{Error, Result},
             typed::TypedContent,
-            utils::{pad_message, unpad_message}};
+            utils::{marshal_bytes, pad_message, unmarshal_bytes, unpad_message}};
 
 /// An RSA key pair for encryption and decryption.
 #[derive(Debug, Clone)]
@@ -74,7 +74,7 @@ impl KeyPair for RsaKeyPair {
             .map(|chunk| self.public.encrypt(chunk))
             .collect::<Result<_>>()?;
 
-        let content = content.into_iter().flatten().collect();
+        let content = marshal_bytes(&content);
         let content = Content::Rsa(self.chunk_size, content);
 
         Ok(Message {
@@ -93,13 +93,15 @@ impl KeyPair for RsaKeyPair {
     /// * `Error::IncorrectAlgorithm` if the message content type is not `Content::Rsa`.
     /// * Other potential errors during decryption or unpadding.
     fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
-        let Content::Rsa(chunk_size, chunks) = message.content else {
+        let Content::Rsa(chunk_size, raw_bytes) = message.content else {
             return Err(Error::IncorrectAlgorithm);
         };
 
+        let chunks = unmarshal_bytes(&raw_bytes);
+
         let bytes: Vec<u8> = chunks
-            .chunks_exact(chunk_size)
-            .flat_map(|chunk| self.private.decrypt(chunk))
+            .into_iter()
+            .flat_map(|chunk| self.private.decrypt(&chunk))
             .collect();
 
         Ok(unpad_message(&bytes, chunk_size).to_vec())
