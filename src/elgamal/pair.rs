@@ -7,7 +7,7 @@ use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
             message::{Content, Message},
             result::{Error, Result},
             typed::TypedContent,
-            utils::{pad_message, unpad_message}};
+            utils::{marshal_bytes, pad_message, unmarshal_bytes, unpad_message}};
 
 /// A key pair for the ElGamal cryptosystem.
 #[derive(Debug, Clone)]
@@ -23,8 +23,6 @@ pub struct ElGamalKeyPair {
     pub chunk_size: usize,
 }
 
-impl PublicKey for ElGamalPublic {}
-impl PrivateKey for ElGamalPrivate {}
 
 impl KeyPair for ElGamalKeyPair {
     type Public = ElGamalPublic;
@@ -75,6 +73,7 @@ impl KeyPair for ElGamalKeyPair {
             .map(|chunk| self.public.encrypt(chunk))
             .collect::<Result<_>>()?;
 
+        let blocks = marshal_bytes(&blocks);
         Ok(Message {
             content_type,
             content: Content::ElGamal(self.chunk_size, blocks),
@@ -89,11 +88,12 @@ impl KeyPair for ElGamalKeyPair {
     /// * The decrypted content as a byte vector (`Vec<u8>`) on success.
     /// * An `Error` indicating the reason for failure (e.g., incorrect algorithm, decryption error).
     fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
-        let Content::ElGamal(chunk_size, chunks) = message.content else {
+        let Content::ElGamal(chunk_size, raw_bytes) = message.content else {
             return Err(Error::IncorrectAlgorithm);
         };
 
-        let bytes: Vec<u8> = chunks
+        let bytes = unmarshal_bytes(&raw_bytes);
+        let bytes: Vec<u8> = bytes
             .iter()
             .flat_map(|chunk| self.private.decrypt(chunk))
             .collect();

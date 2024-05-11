@@ -53,7 +53,7 @@ impl PrivateKey for RabinPrivate {
 
         for m in [m1, m2, m3, m4] {
             let m = m.to_be_bytes();
-            if m.ends_with(b"rabin") {
+            if m.ends_with(b"RaBiN") {
                 return m;
             }
         }

@@ -19,7 +19,7 @@ pub enum Content {
     Rsa(usize, Vec<u8>),
 
     /// ElGamal encryption content containing the chunk size and ciphertext pairs.
-    ElGamal(usize, Vec<[UBig; 2]>),
+    ElGamal(usize, Vec<u8>),
 
     /// Rabin encryption content containing the single Rabin ciphertext.
     Rabin(Vec<u8>),
