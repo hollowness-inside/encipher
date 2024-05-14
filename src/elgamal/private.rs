@@ -1,9 +1,7 @@
 use ibig::UBig;
 
-use crate::{keypair::PrivateKey,
-            result::Result};
-
 use super::basic::elgamal_decrypt;
+use crate::{keypair::PrivateKey, result::Result};
 
 /// Private key for the ElGamal cryptosystem.
 #[derive(Debug, Clone)]

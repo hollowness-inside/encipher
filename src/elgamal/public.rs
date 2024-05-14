@@ -26,6 +26,13 @@ impl PublicKey for ElGamalPublic {
         elgamal_encrypt(bytes, &self.prime, &self.alpha, &self.beta)
     }
 
+    /// Encrypts a byte slice using the ElGamal public key dividing the slice into chunks prior and marshalling
+    /// output blocks into one.
+    ///
+    /// This method takes a slice of bytes (`bytes`) as input and returns a `Result` containing either:
+    /// * A tuple of two `UBig` values on success, representing the encrypted message (`c1`, `c2`).
+    /// * An `Error::SmallKey` if the message is too large for the key.
+    ///
     fn encrypt_chunked(&self, bytes: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
         let blocks: Vec<_> = pad_message(&bytes, chunk_size)
             .chunks(chunk_size - 1)

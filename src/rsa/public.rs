@@ -1,8 +1,9 @@
 use ibig::UBig;
 
 use super::basic::{rsa_decrypt, rsa_encrypt};
-use crate::utils::{marshal_bytes, pad_message};
-use crate::{keypair::PublicKey, result::Result};
+use crate::{keypair::PublicKey,
+            result::Result,
+            utils::{marshal_bytes, pad_message}};
 
 /// Public key for the RSA algorithm.
 #[derive(Debug, Clone)]
