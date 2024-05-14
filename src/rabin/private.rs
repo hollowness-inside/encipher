@@ -15,11 +15,6 @@ pub struct RabinPrivate {
 }
 
 impl PrivateKey for RabinPrivate {
-    /// Decrypts a Rabin-encrypted message using the private key.
-    ///
-    /// This function takes a `UBig` representing the encrypted message as input and returns an array
-    /// of four `IBig` values, which are the possible decryptions due to Rabin's ambiguity.
-    ///
     #[inline]
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         rabin_decrypt(message, &self.prime_1, &self.prime_2)

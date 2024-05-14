@@ -12,12 +12,6 @@ pub struct ElGamalPrivate {
 }
 
 impl PrivateKey for ElGamalPrivate {
-    /// Decrypts an ElGamal ciphertext using the private key.
-    ///
-    /// `message`: A slice containing the two ElGamal ciphertext components (`c1`, `c2`).
-    ///
-    /// Returns the decrypted message (`UBig`) on success.
-    ///
     #[inline]
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         elgamal_decrypt(message, &self.prime, &self.key)

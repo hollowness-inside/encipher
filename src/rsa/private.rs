@@ -18,10 +18,6 @@ pub struct RsaPrivate {
 }
 
 impl PrivateKey for RsaPrivate {
-    /// Decrypts a message received using the corresponding RSA public key.
-    ///
-    /// This method takes a message as a `UBig` and returns the decrypted message as a `UBig`.
-    ///
     #[inline]
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         let div = &self.prime_1 * &self.prime_2;
