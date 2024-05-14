@@ -10,7 +10,7 @@ pub trait PublicKey {
 pub trait PrivateKey {
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>>;
     fn decrypt_marshalled(&self, message: &[u8]) -> Result<Vec<u8>>;
-    
+
     fn encrypt(&self, message: &[u8]) -> Result<Vec<u8>>;
     fn encrypt_chunked(&self, bytes: &[u8], chunk_size: usize) -> Result<Vec<u8>>;
 }

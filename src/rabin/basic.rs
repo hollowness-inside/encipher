@@ -1,6 +1,5 @@
 use ibig::{ubig, UBig};
-use ibig_ext::powmod::PowMod;
-use ibig_ext::sqrt::SquareRootMod;
+use ibig_ext::{powmod::PowMod, sqrt::SquareRootMod};
 
 use super::MAGIC;
 use crate::result::{Error, Result};
