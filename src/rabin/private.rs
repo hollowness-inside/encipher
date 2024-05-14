@@ -1,9 +1,7 @@
 use ibig::UBig;
-use ibig_ext::sqrt::SquareRootMod;
 
-use super::{basic::rabin_decrypt, MAGIC};
-use crate::{keypair::PrivateKey,
-            result::{Error, Result}};
+use super::basic::rabin_decrypt;
+use crate::{keypair::PrivateKey, result::Result};
 
 /// Private key for the Rabin cryptosystem.
 #[derive(Debug, Clone)]
