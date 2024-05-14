@@ -1,6 +1,6 @@
 use ibig::UBig;
 
-use super::basic::{rsa_decrypt, rsa_encrypt, rsa_encrypt_chunked};
+use super::basic::{rsa_decrypt, rsa_decrypt_marshalled, rsa_encrypt, rsa_encrypt_chunked};
 use crate::{keypair::PrivateKey, result::Result};
 
 /// Private key for the RSA algorithm.
@@ -29,11 +29,18 @@ impl PrivateKey for RsaPrivate {
     }
 
     #[inline]
+    fn decrypt_marshalled(&self, message: &[u8]) -> Result<Vec<u8>> {
+        let div = &self.prime_1 * &self.prime_2;
+        rsa_decrypt_marshalled(message, &self.exponent, &div)
+    }
+
+    #[inline]
     fn encrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         let div = &self.prime_1 * &self.prime_2;
         rsa_encrypt(message, &self.exponent, &div)
     }
 
+    #[inline]
     fn encrypt_chunked(&self, bytes: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
         let div = &self.prime_1 * &self.prime_2;
         rsa_encrypt_chunked(bytes, &self.exponent, &div, chunk_size)

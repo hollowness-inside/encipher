@@ -40,4 +40,9 @@ impl PublicKey for ElGamalPublic {
     fn decrypt(&self, _message: &[u8]) -> Result<Vec<u8>> {
         unimplemented!()
     }
+
+    #[inline]
+    fn decrypt_marshalled(&self, _message: &[u8]) -> Result<Vec<u8>> {
+        unimplemented!()
+    }
 }
