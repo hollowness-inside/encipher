@@ -1,9 +1,7 @@
 use ibig::UBig;
 
-use super::basic::{rsa_decrypt, rsa_encrypt};
-use crate::{keypair::PublicKey,
-            result::Result,
-            utils::{marshal_bytes, pad_message}};
+use super::basic::{rsa_decrypt, rsa_encrypt, rsa_encrypt_chunked};
+use crate::{keypair::PublicKey, result::Result};
 
 /// Public key for the RSA algorithm.
 #[derive(Debug, Clone)]
@@ -28,13 +26,9 @@ impl PublicKey for RsaPublic {
         rsa_encrypt(bytes, &self.exponent, &self.divisor)
     }
 
+    #[inline]
     fn encrypt_chunked(&self, bytes: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
-        let content: Vec<Vec<_>> = pad_message(&bytes, chunk_size)
-            .chunks(chunk_size - 1)
-            .map(|chunk| self.encrypt(chunk))
-            .collect::<Result<_>>()?;
-
-        Ok(marshal_bytes(&content))
+        rsa_encrypt_chunked(bytes, &self.exponent, &self.divisor, chunk_size)
     }
 
     #[inline]
