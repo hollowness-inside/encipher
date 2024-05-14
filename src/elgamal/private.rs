@@ -26,4 +26,8 @@ impl PrivateKey for ElGamalPrivate {
     fn encrypt(&self, _message: &[u8]) -> Result<Vec<u8>> {
         unimplemented!()
     }
+
+    fn encrypt_chunked(&self, _bytes: &[u8], _chunk_size: usize) -> Result<Vec<u8>> {
+        unimplemented!()
+    }
 }

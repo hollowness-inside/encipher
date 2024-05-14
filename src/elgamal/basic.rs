@@ -12,7 +12,7 @@ pub(super) fn elgamal_encrypt_chunked(
     beta: &UBig,
     chunk_size: usize,
 ) -> Result<Vec<u8>> {
-    let blocks: Vec<_> = pad_message(&bytes, chunk_size)
+    let blocks: Vec<_> = pad_message(bytes, chunk_size)
         .chunks(chunk_size - 1)
         .map(|chunk| elgamal_encrypt(chunk, prime, alpha, beta))
         .collect::<Result<_>>()?;

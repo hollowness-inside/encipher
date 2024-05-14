@@ -10,7 +10,7 @@ pub(super) fn rsa_encrypt_chunked(
     divisor: &UBig,
     chunk_size: usize,
 ) -> Result<Vec<u8>> {
-    let content: Vec<Vec<_>> = pad_message(&bytes, chunk_size)
+    let content: Vec<Vec<_>> = pad_message(bytes, chunk_size)
         .chunks(chunk_size - 1)
         .map(|chunk| rsa_encrypt(chunk, exponent, divisor))
         .collect::<Result<_>>()?;
