@@ -1,7 +1,7 @@
 use ibig::UBig;
 use ibig_ext::sqrt::SquareRootMod;
 
-use super::{basic::rabin_encrypt, MAGIC};
+use super::MAGIC;
 use crate::{keypair::PrivateKey,
             result::{Error, Result}};
 
@@ -55,7 +55,7 @@ impl PrivateKey for RabinPrivate {
         Err(Error::MessageNotFound)
     }
 
-    fn encrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
+    fn encrypt(&self, _message: &[u8]) -> Result<Vec<u8>> {
         unimplemented!()
     }
 }

@@ -6,7 +6,7 @@ use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
             message::{Content, Message},
             result::{Error, Result},
             typed::TypedContent,
-            utils::{marshal_bytes, pad_message, unmarshal_bytes, unpad_message}};
+            utils::{unmarshal_bytes, unpad_message}};
 
 /// An RSA key pair for encryption and decryption.
 #[derive(Debug, Clone)]
@@ -68,18 +68,11 @@ impl KeyPair for RsaKeyPair {
     ///
     fn encrypt<C: TypedContent>(&self, message: C) -> Result<Message> {
         let (content_type, bytes) = message.typed();
-
-        let content: Vec<Vec<_>> = pad_message(&bytes, self.chunk_size)
-            .chunks(self.chunk_size - 1)
-            .map(|chunk| self.public.encrypt(chunk))
-            .collect::<Result<_>>()?;
-
-        let content = marshal_bytes(&content);
-        let content = Content::Rsa(self.chunk_size, content);
+        let encrypted = self.public.encrypt_chunked(&bytes, self.chunk_size)?;
 
         Ok(Message {
             content_type,
-            content,
+            content: Content::Rsa(self.chunk_size, encrypted),
         })
     }
 

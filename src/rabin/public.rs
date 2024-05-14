@@ -27,7 +27,12 @@ impl PublicKey for RabinPublic {
     }
 
     #[inline]
-    fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
+    fn encrypt_chunked(&self, _message: &[u8], _chunk_size: usize) -> Result<Vec<u8>> {
+        unimplemented!()
+    }
+
+    #[inline]
+    fn decrypt(&self, _message: &[u8]) -> Result<Vec<u8>> {
         unimplemented!()
     }
 }

@@ -1,7 +1,9 @@
 use ibig::UBig;
 
 use super::basic::elgamal_encrypt;
-use crate::{keypair::PublicKey, result::Result};
+use crate::{keypair::PublicKey,
+            result::Result,
+            utils::{marshal_bytes, pad_message}};
 
 /// Public key for the ElGamal cryptosystem.
 #[derive(Debug, Clone)]
@@ -24,8 +26,17 @@ impl PublicKey for ElGamalPublic {
         elgamal_encrypt(bytes, &self.prime, &self.alpha, &self.beta)
     }
 
+    fn encrypt_chunked(&self, bytes: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
+        let blocks: Vec<_> = pad_message(&bytes, chunk_size)
+            .chunks(chunk_size - 1)
+            .map(|chunk| self.encrypt(chunk))
+            .collect::<Result<_>>()?;
+
+        Ok(marshal_bytes(&blocks))
+    }
+
     #[inline]
-    fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
-        unimplemented!()        
+    fn decrypt(&self, _message: &[u8]) -> Result<Vec<u8>> {
+        unimplemented!()
     }
 }

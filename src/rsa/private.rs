@@ -1,5 +1,4 @@
 use ibig::UBig;
-use ibig_ext::powmod::PowMod;
 
 use super::basic::{rsa_decrypt, rsa_encrypt};
 use crate::{keypair::PrivateKey, result::Result};
