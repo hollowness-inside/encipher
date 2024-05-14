@@ -3,7 +3,7 @@ use ibig_ext::powmod::PowMod;
 use rand::Rng;
 
 use crate::{result::{Error, Result},
-            utils::{marshal_bytes, pad_message, unmarshal_bytes}};
+            utils::{marshal_bytes, pad_message, unmarshal_bytes, unpad_message}};
 
 pub(super) fn elgamal_encrypt_chunked(
     bytes: &[u8],
@@ -63,4 +63,21 @@ pub(super) fn elgamal_decrypt(message: &[u8], prime: &UBig, key: &UBig) -> Resul
     let bytes = message.to_le_bytes();
 
     Ok(bytes[0..bytes.len() - 1].to_vec())
+}
+
+pub(super) fn elgamal_decrypt_chunked(
+    message: &[u8],
+    prime: &UBig,
+    key: &UBig,
+    chunk_size: usize,
+) -> Result<Vec<u8>> {
+    let bytes: Vec<u8> = unmarshal_bytes(message)
+        .iter()
+        .map(|chunk| elgamal_decrypt(chunk, prime, key))
+        .collect::<Result<Vec<_>>>()?
+        .into_iter()
+        .flatten()
+        .collect();
+
+    Ok(unpad_message(&bytes, chunk_size).to_vec())
 }

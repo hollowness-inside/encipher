@@ -21,18 +21,18 @@ pub(super) fn rabin_decrypt(message: &[u8], prime_1: &UBig, prime_2: &UBig) -> R
     let p1 = prime_1.clone();
     let p2 = prime_2.clone();
 
-    let (_, u, v) = prime_1.extended_gcd(&prime_2);
+    let (_, u, v) = prime_1.extended_gcd(prime_2);
     let message = UBig::from_be_bytes(message);
     let u = UBig::try_from(u).expect("Cannot convert u to UBig");
     let v = UBig::try_from(v).expect("Cannot convert v to UBig");
 
     let mp1: UBig = message
         .clone()
-        .square_root_mod(&prime_1)
+        .square_root_mod(prime_1)
         .expect("No root")
         .0;
 
-    let mp2: UBig = message.square_root_mod(&prime_2).expect("No root").0;
+    let mp2: UBig = message.square_root_mod(prime_2).expect("No root").0;
 
     let n = &p1 * &p2;
     let m1: UBig = (&u * &p1 * &mp2 + &v * &p2 * &mp1) % &n;

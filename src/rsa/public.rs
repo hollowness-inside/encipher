@@ -1,6 +1,6 @@
 use ibig::UBig;
 
-use super::basic::{rsa_decrypt, rsa_decrypt_marshalled, rsa_encrypt, rsa_encrypt_chunked};
+use super::basic::{rsa_decrypt, rsa_decrypt_chunked, rsa_encrypt, rsa_encrypt_chunked};
 use crate::{keypair::PublicKey, result::Result};
 
 /// Public key for the RSA algorithm.
@@ -31,7 +31,7 @@ impl PublicKey for RsaPublic {
     }
 
     #[inline]
-    fn decrypt_marshalled(&self, message: &[u8]) -> Result<Vec<u8>> {
-        rsa_decrypt_marshalled(message, &self.exponent, &self.divisor)
+    fn decrypt_chunked(&self, message: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
+        rsa_decrypt_chunked(message, &self.exponent, &self.divisor, chunk_size)
     }
 }

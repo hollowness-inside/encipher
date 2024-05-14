@@ -9,13 +9,13 @@ pub trait PublicKey {
     /// Decrypts an encrypted slice using the public key.
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>>;
     /// Unmarshalls the given slice containing chunks and then decrypts each separately using the public key.
-    fn decrypt_marshalled(&self, message: &[u8]) -> Result<Vec<u8>>;
+    fn decrypt_chunked(&self, message: &[u8], chunk_size: usize) -> Result<Vec<u8>>;
 }
 pub trait PrivateKey {
     /// Decrypts an encrypted slice using the public key.
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>>;
     /// Unmarshalls the given slice containing chunks and then decrypts each separately using the public key.
-    fn decrypt_marshalled(&self, message: &[u8]) -> Result<Vec<u8>>;
+    fn decrypt_chunked(&self, message: &[u8], chunk_size: usize) -> Result<Vec<u8>>;
 
     /// Encrypts a byte slice using the public key.
     fn encrypt(&self, message: &[u8]) -> Result<Vec<u8>>;
