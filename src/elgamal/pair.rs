@@ -7,7 +7,7 @@ use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
             message::{Content, Message},
             result::{Error, Result},
             typed::TypedContent,
-            utils::{marshal_bytes, pad_message, unmarshal_bytes, unpad_message}};
+            utils::{unmarshal_bytes, unpad_message}};
 
 /// A key pair for the ElGamal cryptosystem.
 #[derive(Debug, Clone)]
@@ -67,12 +67,8 @@ impl KeyPair for ElGamalKeyPair {
     /// * An `Error` indicating the reason for failure.
     fn encrypt<'c, C: TypedContent>(&self, content: C) -> Result<Message> {
         let (content_type, bytes) = content.typed();
-        let blocks: Vec<_> = pad_message(&bytes, self.chunk_size)
-            .chunks(self.chunk_size - 1)
-            .map(|chunk| self.public.encrypt(chunk))
-            .collect::<Result<_>>()?;
+        let blocks = self.public.encrypt_chunked(&bytes, self.chunk_size)?;
 
-        let blocks = marshal_bytes(&blocks);
         Ok(Message {
             content_type,
             content: Content::ElGamal(self.chunk_size, blocks),
