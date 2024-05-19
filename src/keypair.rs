@@ -33,7 +33,7 @@ pub trait CryptoKey {
 }
 
 /// Trait defining the common functionalities of a public-private cryptography key pair.
-pub trait KeyPair : CryptoKey {
+pub trait KeyPair: CryptoKey {
     type Public: CryptoKey;
     type Private: CryptoKey;
     /// Generates a new key pair with the specified key bit length and persistence level.

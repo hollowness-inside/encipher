@@ -1,5 +1,5 @@
-use encipher::keypair::CryptoKey;
-use encipher::{keypair::KeyPair, rsa::RsaKeyPair};
+use encipher::{keypair::{CryptoKey, KeyPair},
+               rsa::RsaKeyPair};
 
 fn main() {
     let key = RsaKeyPair::generate(128, 10);

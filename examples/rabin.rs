@@ -1,5 +1,5 @@
-use encipher::keypair::CryptoKey;
-use encipher::{keypair::KeyPair, rabin::RabinKeyPair};
+use encipher::{keypair::{CryptoKey, KeyPair},
+               rabin::RabinKeyPair};
 
 fn main() {
     let key = RabinKeyPair::generate(128, 10);
