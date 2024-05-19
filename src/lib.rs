@@ -1,10 +1,10 @@
 mod utils;
 
+pub mod keypair;
 pub mod result;
-pub mod typed;
+pub mod tobytes;
 
 pub mod elgamal;
-pub mod keypair;
 pub mod rabin;
 pub mod rsa;
 
