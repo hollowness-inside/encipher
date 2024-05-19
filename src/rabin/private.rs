@@ -1,7 +1,7 @@
 use ibig::UBig;
 
 use super::basic::rabin_decrypt;
-use crate::{keypair::PrivateKey, result::Result};
+use crate::{keypair::CryptoKey, result::Result};
 
 /// Private key for the Rabin cryptosystem.
 #[derive(Debug, Clone)]
@@ -14,7 +14,7 @@ pub struct RabinPrivate {
     pub prime_2: UBig,
 }
 
-impl PrivateKey for RabinPrivate {
+impl CryptoKey for RabinPrivate {
     #[inline]
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         rabin_decrypt(message, &self.prime_1, &self.prime_2)

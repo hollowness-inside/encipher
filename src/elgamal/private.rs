@@ -1,7 +1,7 @@
 use ibig::UBig;
 
 use super::basic::elgamal_decrypt;
-use crate::{keypair::PrivateKey, result::Result};
+use crate::{keypair::CryptoKey, result::Result};
 
 /// Private key for the ElGamal cryptosystem.
 #[derive(Debug, Clone)]
@@ -11,7 +11,7 @@ pub struct ElGamalPrivate {
     pub key: UBig,
 }
 
-impl PrivateKey for ElGamalPrivate {
+impl CryptoKey for ElGamalPrivate {
     #[inline]
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         elgamal_decrypt(message, &self.prime, &self.key)

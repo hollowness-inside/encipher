@@ -1,7 +1,7 @@
 use ibig::UBig;
 
 use super::basic::elgamal_encrypt;
-use crate::{keypair::PublicKey, result::Result};
+use crate::{keypair::CryptoKey, result::Result};
 
 /// Public key for the ElGamal cryptosystem.
 #[derive(Debug, Clone)]
@@ -12,7 +12,7 @@ pub struct ElGamalPublic {
     pub beta: UBig,
 }
 
-impl PublicKey for ElGamalPublic {
+impl CryptoKey for ElGamalPublic {
     #[inline]
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
         elgamal_encrypt(bytes, &self.prime, &self.alpha, &self.beta)

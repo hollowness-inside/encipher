@@ -2,7 +2,7 @@ use crate::{result::Result,
             typed::ToBytes,
             utils::{marshal_bytes, pad_message, unmarshal_bytes, unpad_message}};
 
-pub trait PublicKey {
+pub trait CryptoKey {
     /// Encrypts a byte slice using the public key.
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>>;
     /// Encrypts a byte slice chunk by chunk using the public key and returns a marshalled vector.
@@ -22,22 +22,11 @@ pub trait PublicKey {
     /// Unmarshalls the given slice containing chunks and then decrypts each separately using the public key.
     fn decrypt_chunked(&self, message: &[u8], chunk_size: usize) -> Result<Vec<u8>>;
 }
-pub trait PrivateKey {
-    /// Decrypts an encrypted slice using the public key.
-    fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>>;
-    /// Unmarshalls the given slice containing chunks and then decrypts each separately using the public key.
-    fn decrypt_chunked(&self, message: &[u8], chunk_size: usize) -> Result<Vec<u8>>;
-
-    /// Encrypts a byte slice using the public key.
-    fn encrypt(&self, message: &[u8]) -> Result<Vec<u8>>;
-    /// Encrypts a byte slice chunk by chunk using the public key and returns a marshalled vector.
-    fn encrypt_chunked(&self, bytes: &[u8], chunk_size: usize) -> Result<Vec<u8>>;
-}
 
 /// Trait defining the common functionalities of a public-private cryptography key pair.
 pub trait KeyPair {
-    type Public: PublicKey;
-    type Private: PrivateKey;
+    type Public: CryptoKey;
+    type Private: CryptoKey;
     /// Generates a new key pair with the specified key bit length and persistence level.
     ///
     /// * `bit_length`: The desired bit length for the keys in the pair.

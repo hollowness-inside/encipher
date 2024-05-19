@@ -1,7 +1,7 @@
 use ibig::UBig;
 
 use super::basic::rabin_encrypt;
-use crate::{keypair::PublicKey, result::Result};
+use crate::{keypair::CryptoKey, result::Result};
 
 /// Public key for the Rabin cryptosystem.
 #[derive(Debug, Clone)]
@@ -11,7 +11,7 @@ pub struct RabinPublic {
     pub divisor: UBig,
 }
 
-impl PublicKey for RabinPublic {
+impl CryptoKey for RabinPublic {
     #[inline]
     fn encrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         rabin_encrypt(message, &self.divisor)
