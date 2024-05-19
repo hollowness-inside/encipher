@@ -57,39 +57,6 @@ impl KeyPair for ElGamalKeyPair {
         }
     }
 
-    /// Encrypts the provided content using the public key of this key pair.
-    ///
-    /// * `content`: The content to be encrypted, implementing the `TypedContent` trait.
-    ///
-    /// Returns a `Result` containing either:
-    /// * The encrypted message (`Message`) on success.
-    /// * An `Error` indicating the reason for failure.
-    fn encrypt<'c, C: ToBytes>(&self, content: C) -> Result<Content> {
-        let bytes = content.to_bytes();
-        let encrypted = self.public.encrypt_chunked(&bytes, self.chunk_size)?;
-        Ok(Content::new(self.chunk_size, &encrypted))
-    }
-
-    /// Decrypts the provided message using the private key of this key pair.
-    ///
-    /// * `message`: The message to be decrypted, represented as a `Message` struct.
-    ///
-    /// Returns a `Result` containing either:
-    /// * The decrypted content as a byte vector (`Vec<u8>`) on success.
-    /// * An `Error` indicating the reason for failure (e.g., incorrect algorithm, decryption error).
-    fn decrypt(&self, message: Content) -> Result<Vec<u8>> {
-        let bytes = unmarshal_bytes(&message.data);
-        let bytes: Vec<u8> = bytes
-            .into_iter()
-            .map(|chunk| self.private.decrypt(&chunk))
-            .collect::<Result<Vec<_>>>()?
-            .into_iter()
-            .flatten()
-            .collect();
-
-        Ok(unpad_message(&bytes, message.chunk_size).to_vec())
-    }
-
     fn public(&self) -> &Self::Public {
         &self.public
     }

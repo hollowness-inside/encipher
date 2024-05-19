@@ -54,45 +54,7 @@ impl KeyPair for RsaKeyPair {
             chunk_size: 16,
         }
     }
-
-    /// Encrypts the provided content using the public key of this key pair.
-    ///
-    /// * `content`: The content to be encrypted, implementing the `TypedContent` trait.
-    ///
-    /// Returns a `Result` containing either:
-    /// * The encrypted message (`Message`) on success.
-    /// * An `Error` indicating the reason for failure.
-    /// * `Error::SmallKey` if the message is too large for the key.
-    /// * Other potential errors during encryption or padding.
-    ///
-    fn encrypt<C: ToBytes>(&self, message: C) -> Result<Content> {
-        let bytes = message.to_bytes();
-        let encrypted = self.public.encrypt_chunked(&bytes, self.chunk_size)?;
-        Ok(Content::new(self.chunk_size, &encrypted))
-    }
-
-    /// Decrypts the provided message using the private key of this key pair.
-    ///
-    /// * `message`: The message to be decrypted, represented as a `Message` struct.
-    ///
-    /// Returns a `Result` containing either:
-    /// * The decrypted content as a byte vector (`Vec<u8>`) on success.
-    /// * An `Error` indicating the reason for failure:
-    /// * `Error::IncorrectAlgorithm` if the message content type is not `Content::Rsa`.
-    /// * Other potential errors during decryption or unpadding.
-    fn decrypt(&self, message: Content) -> Result<Vec<u8>> {
-        let chunks = unmarshal_bytes(&message.data);
-        let bytes: Vec<u8> = chunks
-            .into_iter()
-            .map(|chunk| self.private.decrypt(&chunk))
-            .collect::<Result<Vec<_>>>()?
-            .into_iter()
-            .flatten()
-            .collect();
-
-        Ok(unpad_message(&bytes, message.chunk_size).to_vec())
-    }
-
+  
     fn public(&self) -> &Self::Public {
         &self.public
     }
@@ -106,10 +68,5 @@ impl RsaKeyPair {
     /// Creates a new RSA key pair with a default persistence level of 10.
     pub fn new(bit_length: usize) -> Self {
         Self::generate(bit_length, 10)
-    }
-
-    /// Sets the chunk size used for message padding.
-    pub fn set_chunk_size(&mut self, chunk_size: usize) {
-        self.chunk_size = chunk_size;
     }
 }

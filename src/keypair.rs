@@ -1,5 +1,6 @@
 use crate::{result::Result,
-            typed::{Content, ToBytes}};
+            typed::{Content, ToBytes},
+            utils::{unmarshal_bytes, unpad_message}};
 
 pub trait PublicKey {
     /// Encrypts a byte slice using the public key.
@@ -41,14 +42,25 @@ pub trait KeyPair {
     /// * `content`: The content to be encrypted, implementing the `TypedContent` trait.
     ///
     /// Returns a `Result` containing either the encrypted message (`Message`) on success or an error (`Error`) indicating the reason for failure.
-    fn encrypt<C: ToBytes>(&self, content: C) -> Result<Content>;
+    fn encrypt<C: ToBytes>(&self, message: C, chunk_size: usize) -> Result<Content> {
+        let bytes = message.to_bytes();
+        let encrypted = self.public().encrypt_chunked(&bytes, chunk_size)?;
+        Ok(Content::new(chunk_size, &encrypted))
+    }
 
     /// Decrypts the provided message using the private key of this key pair.
-    ///
-    /// * `message`: The message to be decrypted, represented as a `Message` struct.
-    ///
-    /// Returns a `Result` containing either the decrypted content as a byte vector (`Vec<u8>`) on success or an error (`Error`) indicating the reason for failure.
-    fn decrypt(&self, message: Content) -> Result<Vec<u8>>;
+    fn decrypt(&self, message: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
+        let chunks = unmarshal_bytes(message);
+        let bytes: Vec<u8> = chunks
+            .into_iter()
+            .map(|chunk| self.private().decrypt(&chunk))
+            .collect::<Result<Vec<_>>>()?
+            .into_iter()
+            .flatten()
+            .collect();
+
+        Ok(unpad_message(&bytes, chunk_size).to_vec())
+    }
 
     fn public(&self) -> &Self::Public;
     fn private(&self) -> &Self::Private;

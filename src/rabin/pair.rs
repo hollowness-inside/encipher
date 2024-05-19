@@ -42,33 +42,6 @@ impl KeyPair for RabinKeyPair {
         }
     }
 
-    /// Encrypts the provided content using the public key of this key pair.
-    ///
-    /// * `content`: The content to be encrypted, implementing the `TypedContent` trait.
-    ///
-    /// Returns a `Result` containing either:
-    /// * The encrypted message (`Message`) on success.
-    /// * An `Error` indicating the reason for failure.
-    fn encrypt<'c, C: ToBytes>(&self, content: C) -> Result<Content> {
-        let bytes = content.to_bytes();
-        let encrypted = self.public.encrypt(&bytes)?;
-
-        // Ok(Content::new(self.chunk_size, &encrypted))
-        todo!("{:?}", &encrypted);
-    }
-
-    /// Decrypts the provided message using the private key of this key pair.
-    ///
-    /// * `message`: The message to be decrypted, represented as a `Message` struct.
-    ///
-    /// Returns a `Result` containing either:
-    /// * The decrypted content as a byte vector (`Vec<u8>`) on success.
-    /// * An `Error::IncorrectAlgorithm` if the message content type is not `Content::Rabin`.
-    /// * An `Error::MessageNotFound` if no valid decryption candidate was found.
-    fn decrypt(&self, message: Content) -> Result<Vec<u8>> {
-        self.private.decrypt(&message.data)
-    }
-
     fn public(&self) -> &Self::Public {
         &self.public
     }
