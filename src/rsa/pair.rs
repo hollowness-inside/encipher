@@ -2,10 +2,7 @@ use ibig::{ubig, UBig};
 use ibig_ext::prime_gen::gen_sized_prime;
 
 use super::{RsaPrivate, RsaPublic};
-use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
-            result::Result,
-            typed::{Content, ToBytes},
-            utils::{unmarshal_bytes, unpad_message}};
+use crate::keypair::KeyPair;
 
 /// An RSA key pair for encryption and decryption.
 #[derive(Debug, Clone)]
@@ -16,9 +13,6 @@ pub struct RsaKeyPair {
 
     /// The private  key for decryption.
     private: RsaPrivate,
-
-    /// The chunk size of data for encryption/decryption (in bytes).
-    pub chunk_size: usize,
 }
 
 impl KeyPair for RsaKeyPair {
@@ -51,10 +45,9 @@ impl KeyPair for RsaKeyPair {
                 prime_1: p,
                 prime_2: q,
             },
-            chunk_size: 16,
         }
     }
-  
+
     fn public(&self) -> &Self::Public {
         &self.public
     }

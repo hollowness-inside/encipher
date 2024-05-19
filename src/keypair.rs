@@ -1,5 +1,5 @@
 use crate::{result::Result,
-            typed::{Content, ToBytes},
+            typed::ToBytes,
             utils::{unmarshal_bytes, unpad_message}};
 
 pub trait PublicKey {
@@ -42,10 +42,10 @@ pub trait KeyPair {
     /// * `content`: The content to be encrypted, implementing the `TypedContent` trait.
     ///
     /// Returns a `Result` containing either the encrypted message (`Message`) on success or an error (`Error`) indicating the reason for failure.
-    fn encrypt<C: ToBytes>(&self, message: C, chunk_size: usize) -> Result<Content> {
+    fn encrypt<C: ToBytes>(&self, message: C, chunk_size: usize) -> Result<Vec<u8>> {
         let bytes = message.to_bytes();
         let encrypted = self.public().encrypt_chunked(&bytes, chunk_size)?;
-        Ok(Content::new(chunk_size, &encrypted))
+        Ok(encrypted)
     }
 
     /// Decrypts the provided message using the private key of this key pair.

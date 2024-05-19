@@ -3,10 +3,7 @@ use ibig_ext::{powmod::PowMod, prime_gen::gen_sized_prime};
 use rand::Rng;
 
 use super::{ElGamalPrivate, ElGamalPublic};
-use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
-            result::Result,
-            typed::{Content, ToBytes},
-            utils::{unmarshal_bytes, unpad_message}};
+use crate::keypair::KeyPair;
 
 /// A key pair for the ElGamal cryptosystem.
 #[derive(Debug, Clone)]
@@ -17,9 +14,6 @@ pub struct ElGamalKeyPair {
 
     /// The private key for decryption.
     private: ElGamalPrivate,
-
-    /// The chunk size used for message padding and encryption.
-    pub chunk_size: usize,
 }
 
 impl KeyPair for ElGamalKeyPair {
@@ -53,7 +47,6 @@ impl KeyPair for ElGamalKeyPair {
                 beta,
             },
             private: ElGamalPrivate { prime, key },
-            chunk_size: 16,
         }
     }
 
@@ -70,10 +63,5 @@ impl ElGamalKeyPair {
     /// Creates a new ElGamal key pair with a default bit length and persistence level.
     pub fn new(bit_length: usize) -> Self {
         Self::generate(bit_length, 10)
-    }
-
-    /// Sets the chunk size used for message padding.
-    pub fn set_chunk_size(&mut self, chunk_size: usize) {
-        self.chunk_size = chunk_size;
     }
 }

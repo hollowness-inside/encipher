@@ -2,9 +2,7 @@ use ibig::UBig;
 use ibig_ext::prime_gen::gen_sized_prime;
 
 use super::{private::RabinPrivate, public::RabinPublic};
-use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
-            result::Result,
-            typed::{Content, ToBytes}};
+use crate::keypair::KeyPair;
 
 /// A key pair for the Rabin cryptosystem.
 #[derive(Debug, Clone)]
