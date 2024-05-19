@@ -1,6 +1,6 @@
 use ibig::UBig;
 
-use super::basic::{rsa_decrypt, rsa_decrypt_chunked, rsa_encrypt, rsa_encrypt_chunked};
+use super::basic::{rsa_decrypt, rsa_decrypt_chunked, rsa_encrypt};
 use crate::{keypair::CryptoKey, result::Result};
 
 /// Private key for the RSA algorithm.
