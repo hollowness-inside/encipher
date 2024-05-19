@@ -35,10 +35,4 @@ impl CryptoKey for RsaPrivate {
         let div = &self.prime_1 * &self.prime_2;
         rsa_encrypt(message, &self.exponent, &div)
     }
-
-    #[inline]
-    fn encrypt_chunked(&self, bytes: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
-        let div = &self.prime_1 * &self.prime_2;
-        rsa_encrypt_chunked(bytes, &self.exponent, &div, chunk_size)
-    }
 }
