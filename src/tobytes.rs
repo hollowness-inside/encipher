@@ -10,7 +10,7 @@ impl<'s> ToBytes for &'s str {
 }
 
 impl ToBytes for String {
-    #[inline(always)]
+    #[inline]
     fn to_bytes(self) -> Vec<u8> {
         self.as_str().to_bytes()
     }
@@ -24,7 +24,7 @@ impl<'s> ToBytes for &'s [u8] {
 }
 
 impl ToBytes for Vec<u8> {
-    #[inline(always)]
+    #[inline]
     fn to_bytes(self) -> Vec<u8> {
         self.as_slice().to_bytes()
     }
