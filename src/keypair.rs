@@ -1,12 +1,21 @@
 use crate::{result::Result,
             typed::ToBytes,
-            utils::{unmarshal_bytes, unpad_message}};
+            utils::{marshal_bytes, pad_message, unmarshal_bytes, unpad_message}};
 
 pub trait PublicKey {
     /// Encrypts a byte slice using the public key.
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>>;
     /// Encrypts a byte slice chunk by chunk using the public key and returns a marshalled vector.
-    fn encrypt_chunked(&self, bytes: &[u8], chunk_size: usize) -> Result<Vec<u8>>;
+
+    #[inline]
+    fn encrypt_chunked(&self, bytes: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
+        let content: Vec<Vec<_>> = pad_message(bytes, chunk_size)
+            .chunks(chunk_size - 1)
+            .map(|chunk| self.encrypt(chunk))
+            .collect::<Result<_>>()?;
+
+        Ok(marshal_bytes(&content))
+    }
 
     /// Decrypts an encrypted slice using the public key.
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>>;

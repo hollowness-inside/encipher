@@ -1,6 +1,6 @@
 use ibig::UBig;
 
-use super::basic::{elgamal_encrypt, elgamal_encrypt_chunked};
+use super::basic::elgamal_encrypt;
 use crate::{keypair::PublicKey, result::Result};
 
 /// Public key for the ElGamal cryptosystem.
@@ -16,11 +16,6 @@ impl PublicKey for ElGamalPublic {
     #[inline]
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
         elgamal_encrypt(bytes, &self.prime, &self.alpha, &self.beta)
-    }
-
-    #[inline]
-    fn encrypt_chunked(&self, bytes: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
-        elgamal_encrypt_chunked(bytes, &self.prime, &self.alpha, &self.beta, chunk_size)
     }
 
     #[inline]
