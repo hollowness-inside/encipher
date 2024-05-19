@@ -22,9 +22,4 @@ impl CryptoKey for ElGamalPublic {
     fn decrypt(&self, _message: &[u8]) -> Result<Vec<u8>> {
         unimplemented!()
     }
-
-    #[inline]
-    fn decrypt_chunked(&self, _message: &[u8], _chunk_size: usize) -> Result<Vec<u8>> {
-        unimplemented!()
-    }
 }

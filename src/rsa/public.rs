@@ -1,6 +1,6 @@
 use ibig::UBig;
 
-use super::basic::{rsa_decrypt, rsa_decrypt_chunked, rsa_encrypt};
+use super::basic::{rsa_decrypt, rsa_encrypt};
 use crate::{keypair::CryptoKey, result::Result};
 
 /// Public key for the RSA algorithm.
@@ -23,10 +23,5 @@ impl CryptoKey for RsaPublic {
     #[inline]
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         rsa_decrypt(message, &self.exponent, &self.divisor)
-    }
-
-    #[inline]
-    fn decrypt_chunked(&self, message: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
-        rsa_decrypt_chunked(message, &self.exponent, &self.divisor, chunk_size)
     }
 }

@@ -21,11 +21,6 @@ impl CryptoKey for RabinPrivate {
     }
 
     #[inline]
-    fn decrypt_chunked(&self, _message: &[u8], _chunk_size: usize) -> Result<Vec<u8>> {
-        unimplemented!()
-    }
-
-    #[inline]
     fn encrypt(&self, _message: &[u8]) -> Result<Vec<u8>> {
         unimplemented!()
     }

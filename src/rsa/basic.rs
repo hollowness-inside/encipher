@@ -1,8 +1,7 @@
 use ibig::UBig;
 use ibig_ext::powmod::PowMod;
 
-use crate::{result::{Error, Result},
-            utils::{unmarshal_bytes, unpad_message}};
+use crate::result::{Error, Result};
 
 pub(super) fn rsa_encrypt(bytes: &[u8], exponent: &UBig, divisor: &UBig) -> Result<Vec<u8>> {
     let mut bytes = bytes.to_vec();
@@ -23,24 +22,4 @@ pub(super) fn rsa_decrypt(message: &[u8], exponent: &UBig, divisor: &UBig) -> Re
     let bytes = out.to_le_bytes();
 
     Ok(bytes[0..bytes.len() - 1].to_vec())
-}
-
-fn rsa_decrypt_marshalled(message: &[u8], exponent: &UBig, divisor: &UBig) -> Result<Vec<u8>> {
-    Ok(unmarshal_bytes(message)
-        .iter()
-        .map(|chunk| rsa_decrypt(chunk, exponent, divisor))
-        .collect::<Result<Vec<_>>>()?
-        .into_iter()
-        .flatten()
-        .collect())
-}
-
-pub(super) fn rsa_decrypt_chunked(
-    message: &[u8],
-    exponent: &UBig,
-    divisor: &UBig,
-    chunk_size: usize,
-) -> Result<Vec<u8>> {
-    let decrypted = rsa_decrypt_marshalled(message, exponent, divisor)?;
-    Ok(unpad_message(&decrypted, chunk_size).to_vec())
 }
