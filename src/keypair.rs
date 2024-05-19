@@ -58,16 +58,7 @@ pub trait KeyPair {
 
     /// Decrypts the provided message using the private key of this key pair.
     fn decrypt(&self, message: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
-        let chunks = unmarshal_bytes(message);
-        let bytes: Vec<u8> = chunks
-            .into_iter()
-            .map(|chunk| self.private().decrypt(&chunk))
-            .collect::<Result<Vec<_>>>()?
-            .into_iter()
-            .flatten()
-            .collect();
-
-        Ok(unpad_message(&bytes, chunk_size).to_vec())
+        self.private().decrypt_chunked(message, chunk_size)
     }
 
     fn public(&self) -> &Self::Public;
