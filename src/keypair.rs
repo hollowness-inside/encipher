@@ -1,5 +1,4 @@
 use crate::{result::Result,
-            tobytes::ToBytes,
             utils::{marshal_bytes, pad_message, unmarshal_bytes, unpad_message}};
 
 pub trait CryptoKey {
@@ -34,7 +33,7 @@ pub trait CryptoKey {
 }
 
 /// Trait defining the common functionalities of a public-private cryptography key pair.
-pub trait KeyPair {
+pub trait KeyPair : CryptoKey {
     type Public: CryptoKey;
     type Private: CryptoKey;
     /// Generates a new key pair with the specified key bit length and persistence level.
@@ -44,23 +43,6 @@ pub trait KeyPair {
     ///
     /// Returns the newly generated `Self` instance representing the key pair.
     fn generate(bit_length: usize, persistence: usize) -> Self;
-
-    /// Encrypts the provided content using the public key of this key pair.
-    ///
-    /// * `content`: The content to be encrypted, implementing the `TypedContent` trait.
-    ///
-    /// Returns a `Result` containing either the encrypted message (`Message`) on success or an error (`Error`) indicating the reason for failure.
-    fn encrypt<C: ToBytes>(&self, message: C, chunk_size: usize) -> Result<Vec<u8>> {
-        let bytes = message.to_bytes();
-        let encrypted = self.public().encrypt_chunked(&bytes, chunk_size)?;
-        Ok(encrypted)
-    }
-
-    /// Decrypts the provided message using the private key of this key pair.
-    fn decrypt(&self, message: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
-        self.private().decrypt_chunked(message, chunk_size)
-    }
-
     fn public(&self) -> &Self::Public;
     fn private(&self) -> &Self::Private;
 }
