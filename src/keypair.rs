@@ -1,5 +1,5 @@
 use crate::{result::Result,
-            typed::ToBytes,
+            tobytes::ToBytes,
             utils::{marshal_bytes, pad_message, unmarshal_bytes, unpad_message}};
 
 pub trait CryptoKey {
