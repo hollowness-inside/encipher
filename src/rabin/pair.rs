@@ -3,9 +3,8 @@ use ibig_ext::prime_gen::gen_sized_prime;
 
 use super::{private::RabinPrivate, public::RabinPublic};
 use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
-            message::{Content, Message},
-            result::{Error, Result},
-            typed::TypedContent};
+            result::Result,
+            typed::{Content, ToBytes}};
 
 /// A key pair for the Rabin cryptosystem.
 #[derive(Debug, Clone)]
@@ -50,14 +49,12 @@ impl KeyPair for RabinKeyPair {
     /// Returns a `Result` containing either:
     /// * The encrypted message (`Message`) on success.
     /// * An `Error` indicating the reason for failure.
-    fn encrypt<'c, C: TypedContent>(&self, content: C) -> Result<Message> {
-        let (content_type, bytes) = content.typed();
-        let rabin = self.public.encrypt(&bytes)?;
+    fn encrypt<'c, C: ToBytes>(&self, content: C) -> Result<Content> {
+        let bytes = content.to_bytes();
+        let encrypted = self.public.encrypt(&bytes)?;
 
-        Ok(Message {
-            content_type,
-            content: Content::Rabin(rabin),
-        })
+        // Ok(Content::new(self.chunk_size, &encrypted))
+        todo!("{:?}", &encrypted);
     }
 
     /// Decrypts the provided message using the private key of this key pair.
@@ -68,12 +65,8 @@ impl KeyPair for RabinKeyPair {
     /// * The decrypted content as a byte vector (`Vec<u8>`) on success.
     /// * An `Error::IncorrectAlgorithm` if the message content type is not `Content::Rabin`.
     /// * An `Error::MessageNotFound` if no valid decryption candidate was found.
-    fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
-        let Content::Rabin(content) = message.content else {
-            return Err(Error::IncorrectAlgorithm);
-        };
-
-        self.private.decrypt(&content)
+    fn decrypt(&self, message: Content) -> Result<Vec<u8>> {
+        self.private.decrypt(&message.data)
     }
 
     fn public(&self) -> &Self::Public {

@@ -1,4 +1,5 @@
-use crate::{message::Message, result::Result, typed::TypedContent};
+use crate::{result::Result,
+            typed::{Content, ToBytes}};
 
 pub trait PublicKey {
     /// Encrypts a byte slice using the public key.
@@ -40,14 +41,14 @@ pub trait KeyPair {
     /// * `content`: The content to be encrypted, implementing the `TypedContent` trait.
     ///
     /// Returns a `Result` containing either the encrypted message (`Message`) on success or an error (`Error`) indicating the reason for failure.
-    fn encrypt<C: TypedContent>(&self, content: C) -> Result<Message>;
+    fn encrypt<C: ToBytes>(&self, content: C) -> Result<Content>;
 
     /// Decrypts the provided message using the private key of this key pair.
     ///
     /// * `message`: The message to be decrypted, represented as a `Message` struct.
     ///
     /// Returns a `Result` containing either the decrypted content as a byte vector (`Vec<u8>`) on success or an error (`Error`) indicating the reason for failure.
-    fn decrypt(&self, message: Message) -> Result<Vec<u8>>;
+    fn decrypt(&self, message: Content) -> Result<Vec<u8>>;
 
     fn public(&self) -> &Self::Public;
     fn private(&self) -> &Self::Private;

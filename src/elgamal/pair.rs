@@ -4,9 +4,8 @@ use rand::Rng;
 
 use super::{ElGamalPrivate, ElGamalPublic};
 use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
-            message::{Content, Message},
-            result::{Error, Result},
-            typed::TypedContent,
+            result::Result,
+            typed::{Content, ToBytes},
             utils::{unmarshal_bytes, unpad_message}};
 
 /// A key pair for the ElGamal cryptosystem.
@@ -65,14 +64,10 @@ impl KeyPair for ElGamalKeyPair {
     /// Returns a `Result` containing either:
     /// * The encrypted message (`Message`) on success.
     /// * An `Error` indicating the reason for failure.
-    fn encrypt<'c, C: TypedContent>(&self, content: C) -> Result<Message> {
-        let (content_type, bytes) = content.typed();
-        let blocks = self.public.encrypt_chunked(&bytes, self.chunk_size)?;
-
-        Ok(Message {
-            content_type,
-            content: Content::ElGamal(self.chunk_size, blocks),
-        })
+    fn encrypt<'c, C: ToBytes>(&self, content: C) -> Result<Content> {
+        let bytes = content.to_bytes();
+        let encrypted = self.public.encrypt_chunked(&bytes, self.chunk_size)?;
+        Ok(Content::new(self.chunk_size, &encrypted))
     }
 
     /// Decrypts the provided message using the private key of this key pair.
@@ -82,12 +77,8 @@ impl KeyPair for ElGamalKeyPair {
     /// Returns a `Result` containing either:
     /// * The decrypted content as a byte vector (`Vec<u8>`) on success.
     /// * An `Error` indicating the reason for failure (e.g., incorrect algorithm, decryption error).
-    fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
-        let Content::ElGamal(chunk_size, raw_bytes) = message.content else {
-            return Err(Error::IncorrectAlgorithm);
-        };
-
-        let bytes = unmarshal_bytes(&raw_bytes);
+    fn decrypt(&self, message: Content) -> Result<Vec<u8>> {
+        let bytes = unmarshal_bytes(&message.data);
         let bytes: Vec<u8> = bytes
             .into_iter()
             .map(|chunk| self.private.decrypt(&chunk))
@@ -96,7 +87,7 @@ impl KeyPair for ElGamalKeyPair {
             .flatten()
             .collect();
 
-        Ok(unpad_message(&bytes, chunk_size).to_vec())
+        Ok(unpad_message(&bytes, message.chunk_size).to_vec())
     }
 
     fn public(&self) -> &Self::Public {

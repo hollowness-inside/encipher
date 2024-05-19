@@ -3,9 +3,8 @@ use ibig_ext::prime_gen::gen_sized_prime;
 
 use super::{RsaPrivate, RsaPublic};
 use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
-            message::{Content, Message},
-            result::{Error, Result},
-            typed::TypedContent,
+            result::Result,
+            typed::{Content, ToBytes},
             utils::{unmarshal_bytes, unpad_message}};
 
 /// An RSA key pair for encryption and decryption.
@@ -66,14 +65,10 @@ impl KeyPair for RsaKeyPair {
     /// * `Error::SmallKey` if the message is too large for the key.
     /// * Other potential errors during encryption or padding.
     ///
-    fn encrypt<C: TypedContent>(&self, message: C) -> Result<Message> {
-        let (content_type, bytes) = message.typed();
+    fn encrypt<C: ToBytes>(&self, message: C) -> Result<Content> {
+        let bytes = message.to_bytes();
         let encrypted = self.public.encrypt_chunked(&bytes, self.chunk_size)?;
-
-        Ok(Message {
-            content_type,
-            content: Content::Rsa(self.chunk_size, encrypted),
-        })
+        Ok(Content::new(self.chunk_size, &encrypted))
     }
 
     /// Decrypts the provided message using the private key of this key pair.
@@ -85,12 +80,8 @@ impl KeyPair for RsaKeyPair {
     /// * An `Error` indicating the reason for failure:
     /// * `Error::IncorrectAlgorithm` if the message content type is not `Content::Rsa`.
     /// * Other potential errors during decryption or unpadding.
-    fn decrypt(&self, message: Message) -> Result<Vec<u8>> {
-        let Content::Rsa(chunk_size, raw_bytes) = message.content else {
-            return Err(Error::IncorrectAlgorithm);
-        };
-
-        let chunks = unmarshal_bytes(&raw_bytes);
+    fn decrypt(&self, message: Content) -> Result<Vec<u8>> {
+        let chunks = unmarshal_bytes(&message.data);
         let bytes: Vec<u8> = chunks
             .into_iter()
             .map(|chunk| self.private.decrypt(&chunk))
@@ -99,7 +90,7 @@ impl KeyPair for RsaKeyPair {
             .flatten()
             .collect();
 
-        Ok(unpad_message(&bytes, chunk_size).to_vec())
+        Ok(unpad_message(&bytes, message.chunk_size).to_vec())
     }
 
     fn public(&self) -> &Self::Public {
