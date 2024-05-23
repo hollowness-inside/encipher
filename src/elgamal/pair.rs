@@ -56,20 +56,24 @@ impl KeyPair for ElGamalKeyPair {
         }
     }
 
+    #[inline]
     fn public(&self) -> &Self::Public {
         &self.public
     }
 
+    #[inline]
     fn private(&self) -> &Self::Private {
         &self.private
     }
 }
 
 impl CryptoKey for ElGamalKeyPair {
+    #[inline]
     fn encrypt(&self, bytes: &[u8]) -> crate::result::Result<Vec<u8>> {
         self.public.encrypt(bytes)
     }
 
+    #[inline]
     fn decrypt(&self, message: &[u8]) -> crate::result::Result<Vec<u8>> {
         self.private.decrypt(message)
     }
@@ -77,6 +81,7 @@ impl CryptoKey for ElGamalKeyPair {
 
 impl ElGamalKeyPair {
     /// Creates a new ElGamal key pair with a default bit length and persistence level.
+    #[inline]
     pub fn new(bit_length: usize) -> Self {
         Self::generate(bit_length, 10)
     }

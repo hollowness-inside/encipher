@@ -40,20 +40,24 @@ impl KeyPair for RabinKeyPair {
         }
     }
 
+    #[inline]
     fn public(&self) -> &Self::Public {
         &self.public
     }
 
+    #[inline]
     fn private(&self) -> &Self::Private {
         &self.private
     }
 }
 
 impl CryptoKey for RabinKeyPair {
+    #[inline]
     fn encrypt(&self, bytes: &[u8]) -> crate::result::Result<Vec<u8>> {
         self.public.encrypt(bytes)
     }
 
+    #[inline]
     fn decrypt(&self, message: &[u8]) -> crate::result::Result<Vec<u8>> {
         self.private.decrypt(message)
     }
@@ -70,6 +74,7 @@ fn gen_prime(byte_length: usize, persistence: usize) -> UBig {
 
 impl RabinKeyPair {
     /// Creates a new Rabin key pair with a default persistence level of 10.
+    #[inline]
     pub fn new(bit_length: usize) -> Self {
         Self::generate(bit_length, 10)
     }
