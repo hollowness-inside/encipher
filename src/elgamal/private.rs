@@ -24,10 +24,7 @@ impl CryptoKey for ElGamalPrivate {
     }
 
     #[inline]
-    fn encrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
-        let mut bytes = message.to_vec();
-        bytes.push(0x01);
-
+    fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
         let message = UBig::from_le_bytes(&bytes);
         if message > self.prime {
             return Err(Error::SmallKey);

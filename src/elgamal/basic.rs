@@ -11,11 +11,8 @@ pub(super) fn elgamal_encrypt(
     alpha: &UBig,
     beta: &UBig,
 ) -> Result<Vec<u8>> {
-    let mut bytes = bytes.to_vec();
-    bytes.push(0x01);
-
     let message = UBig::from_le_bytes(&bytes);
-    if &message > prime {
+    if &message >= prime {
         return Err(Error::SmallKey);
     }
 
@@ -46,6 +43,6 @@ pub(super) fn elgamal_decrypt(message: &[u8], prime: &UBig, key: &UBig) -> Resul
 
     let message = (c2 * c1_inv.powmod(key.clone(), prime)) % prime;
     let bytes = message.to_le_bytes();
-
-    Ok(bytes[0..bytes.len() - 1].to_vec())
+    
+    Ok(bytes[0..bytes.len()].to_vec())
 }
