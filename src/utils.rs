@@ -46,6 +46,9 @@ pub(crate) fn unpad_message(bytes: &[u8], block_size: usize) -> &[u8] {
         let bytes: [u8; 8] = bytes[len - 8..len].try_into().unwrap();
         usize::from_le_bytes(bytes)
     };
+    if pad_len > len {
+        return bytes;
+    }
 
     &bytes[0..len - block_size - pad_len]
 }
