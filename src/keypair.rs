@@ -46,3 +46,15 @@ pub trait KeyPair: CryptoKey {
     fn public(&self) -> &Self::Public;
     fn private(&self) -> &Self::Private;
 }
+
+pub trait Signer {
+    fn sign(&self, message: &[u8]) -> Result<Vec<u8>>;
+    fn sign_chunked(&self, message: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
+        let content: Vec<Vec<_>> = pad_message(message, chunk_size)
+            .chunks(chunk_size - 1)
+            .map(|chunk| self.sign(chunk))
+            .collect::<Result<_>>()?;
+
+        Ok(marshal_bytes(&content))
+    }
+}
