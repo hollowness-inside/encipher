@@ -9,8 +9,12 @@ pub trait CryptoKey {
     #[inline]
     fn encrypt_chunked(&self, bytes: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
         let content: Vec<Vec<_>> = pad_message(bytes, chunk_size)
-            .chunks(chunk_size - 1)
-            .map(|chunk| self.encrypt(chunk))
+            .chunks(chunk_size)
+            .map(|chunk| {
+                let mut chunk = chunk.to_vec();
+                chunk.push(0x01);
+                self.encrypt(&chunk)
+            })
             .collect::<Result<_>>()?;
 
         Ok(marshal_bytes(&content))
@@ -22,7 +26,12 @@ pub trait CryptoKey {
     fn decrypt_chunked(&self, message: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
         let bytes: Vec<u8> = unmarshal_bytes(message)
             .iter()
-            .map(|chunk| self.decrypt(chunk))
+            .map(|chunk| {
+                self.decrypt(chunk).and_then(|mut v| {
+                    v.pop();
+                    Ok(v)
+                })
+            })
             .collect::<Result<Vec<_>>>()?
             .into_iter()
             .flatten()
