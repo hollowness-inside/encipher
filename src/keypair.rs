@@ -9,7 +9,7 @@ pub trait CryptoKey {
     #[inline]
     fn encrypt_chunked(&self, bytes: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
         let content: Vec<Vec<_>> = pad_message(bytes, chunk_size)
-            .chunks(chunk_size)
+            .chunks(chunk_size - 1)
             .map(|chunk| {
                 let mut chunk = chunk.to_vec();
                 chunk.push(0x01);
