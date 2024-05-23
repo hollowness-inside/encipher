@@ -1,7 +1,8 @@
 use ibig::UBig;
+use ibig_ext::powmod::PowMod;
 
 use super::basic::elgamal_encrypt;
-use crate::{keypair::CryptoKey, result::Result};
+use crate::{keypair::CryptoKey, result::Result, utils::unmarshal_bytes};
 
 /// Public key for the ElGamal cryptosystem.
 #[derive(Debug, Clone)]
@@ -19,7 +20,15 @@ impl CryptoKey for ElGamalPublic {
     }
 
     #[inline]
-    fn decrypt(&self, _message: &[u8]) -> Result<Vec<u8>> {
-        unimplemented!()
+    fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
+        let cs = unmarshal_bytes(message);
+        let sigma = cs[0].as_slice();
+        let delta = cs[1].as_slice();
+
+        let sigma = UBig::from_be_bytes(sigma);
+        let delta = UBig::from_be_bytes(delta);
+
+        let m = self.beta.powmod(sigma.clone(), &self.prime) * sigma.powmod(delta, &self.prime);
+        Ok(m.to_le_bytes())
     }
 }
