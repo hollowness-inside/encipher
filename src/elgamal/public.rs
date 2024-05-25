@@ -28,7 +28,7 @@ pub struct ElGamalPublic {
 // }
 
 impl PublicKey for ElGamalPublic {
-    fn verify(&self, _message: &[u8]) -> Result<bool> {
+    fn verify(&self, expected: &[u8], _signed_data: &[u8]) -> Result<bool> {
         todo!()
     }
 

@@ -16,5 +16,5 @@ fn test_encrypt_decrypt() {
 fn test_sign_verify() {
     let key = RsaKeyPair::generate(128, 5);
     let signed = key.sign_chunked(&MESSAGE, 8).unwrap();
-    assert!(key.verify_chunked(&signed).unwrap());
+    assert!(key.verify_chunked(&MESSAGE, &signed, 8).unwrap());
 }

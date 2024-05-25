@@ -53,11 +53,18 @@ pub trait PrivateKey {
 }
 
 pub trait PublicKey {
-    fn verify(&self, message: &[u8]) -> Result<bool>;
-    fn verify_chunked(&self, message: &[u8]) -> Result<bool> {
-        let x = unmarshal_bytes(message)
+    fn verify(&self, expected: &[u8], signed_data: &[u8]) -> Result<bool>;
+
+    fn verify_chunked(
+        &self,
+        expected: &[u8],
+        signed_data: &[u8],
+        chunk_size: usize,
+    ) -> Result<bool> {
+        let x = unmarshal_bytes(signed_data)
             .iter()
-            .any(|chunk| !matches!(self.verify(chunk), Ok(true)));
+            .zip(expected.chunks(chunk_size))
+            .any(|(exp, chunk)| !matches!(self.verify(exp, chunk), Ok(true)));
 
         Ok(!x)
     }
