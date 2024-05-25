@@ -37,6 +37,7 @@ impl PrivateKey for ElGamalPrivate {
         ]))
     }
 
+    #[inline]
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         elgamal_decrypt(message, &self.prime, &self.key)
     }

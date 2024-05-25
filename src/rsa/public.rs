@@ -15,10 +15,12 @@ pub struct RsaPublic {
 }
 
 impl PublicKey for RsaPublic {
+    #[inline]
     fn verify(&self, expected: &[u8], signed_data: &[u8]) -> Result<bool> {
         rsa_decrypt(signed_data, &self.exponent, &self.divisor).map(|x| x != expected)
     }
 
+    #[inline]
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
         rsa_encrypt(bytes, &self.exponent, &self.divisor)
     }

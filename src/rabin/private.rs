@@ -19,6 +19,7 @@ impl PrivateKey for RabinPrivate {
         unimplemented!()
     }
 
+    #[inline]
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         rabin_decrypt(message, &self.prime_1, &self.prime_2)
     }

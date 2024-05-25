@@ -16,6 +16,7 @@ impl PublicKey for RabinPublic {
         todo!()
     }
 
+    #[inline]
     fn encrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         rabin_encrypt(message, &self.divisor)
     }

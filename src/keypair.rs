@@ -71,9 +71,8 @@ pub trait PublicKey {
 
     /// Encrypts a byte slice using the public key.
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>>;
-    /// Encrypts a byte slice chunk by chunk using the public key and returns a marshalled vector.
 
-    #[inline]
+    /// Encrypts a byte slice chunk by chunk using the public key and returns a marshalled vector.
     fn encrypt_chunked(&self, bytes: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
         let content: Vec<Vec<_>> = pad_message(bytes, chunk_size)
             .chunks(chunk_size - 1)

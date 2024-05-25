@@ -77,20 +77,24 @@ impl ElGamalKeyPair {
 }
 
 impl PrivateKey for ElGamalKeyPair {
+    #[inline]
     fn sign(&self, message: &[u8]) -> Result<Vec<u8>> {
         self.private.sign(message)
     }
 
+    #[inline]
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         self.private.decrypt(message)
     }
 }
 
 impl PublicKey for ElGamalKeyPair {
+    #[inline]
     fn verify(&self, expected: &[u8], signed_data: &[u8]) -> Result<bool> {
         self.public.verify(expected, signed_data)
     }
 
+    #[inline]
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
         self.public.encrypt(bytes)
     }
