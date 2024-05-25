@@ -1,7 +1,8 @@
 use ibig::UBig;
 
 use super::basic::rabin_decrypt;
-use crate::{keypair::CryptoKey, result::Result};
+use crate::{keypair::{CryptoKey, Signer},
+            result::Result};
 
 /// Private key for the Rabin cryptosystem.
 #[derive(Debug, Clone)]
@@ -22,6 +23,12 @@ impl CryptoKey for RabinPrivate {
 
     #[inline]
     fn encrypt(&self, _message: &[u8]) -> Result<Vec<u8>> {
+        unimplemented!()
+    }
+}
+
+impl Signer for RabinPrivate {
+    fn sign(&self, _message: &[u8]) -> Result<Vec<u8>> {
         unimplemented!()
     }
 }

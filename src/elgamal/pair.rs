@@ -3,7 +3,7 @@ use ibig_ext::{powmod::PowMod, prime_gen::gen_sized_prime};
 use rand::Rng;
 
 use super::{ElGamalPrivate, ElGamalPublic};
-use crate::keypair::{CryptoKey, KeyPair};
+use crate::keypair::{CryptoKey, KeyPair, Signer};
 
 /// A key pair for the ElGamal cryptosystem.
 #[derive(Debug, Clone)]
@@ -84,5 +84,11 @@ impl ElGamalKeyPair {
     #[inline]
     pub fn new(bit_length: usize) -> Self {
         Self::generate(bit_length, 10)
+    }
+}
+
+impl Signer for ElGamalKeyPair {
+    fn sign(&self, message: &[u8]) -> crate::result::Result<Vec<u8>> {
+        self.private.sign(message)
     }
 }

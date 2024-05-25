@@ -42,9 +42,9 @@ pub trait CryptoKey {
 }
 
 /// Trait defining the common functionalities of a public-private cryptography key pair.
-pub trait KeyPair: CryptoKey {
+pub trait KeyPair: CryptoKey + Signer {
     type Public: CryptoKey;
-    type Private: CryptoKey;
+    type Private: CryptoKey + Signer;
     /// Generates a new key pair with the specified key bit length and persistence level.
     ///
     /// * `bit_length`: The desired bit length for the keys in the pair.
@@ -61,7 +61,11 @@ pub trait Signer {
     fn sign_chunked(&self, message: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
         let content: Vec<Vec<_>> = pad_message(message, chunk_size)
             .chunks(chunk_size - 1)
-            .map(|chunk| self.sign(chunk))
+            .map(|chunk| {
+                let mut chunk = chunk.to_vec();
+                chunk.push(0x01);
+                self.sign(&chunk)
+            })
             .collect::<Result<_>>()?;
 
         Ok(marshal_bytes(&content))
