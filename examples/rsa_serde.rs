@@ -1,4 +1,4 @@
-use encipher::{keypair::{CryptoKey, KeyPair},
+use encipher::{keypair::{KeyPair, PrivateKey, PublicKey},
                rsa::RsaKeyPair};
 
 fn main() {
