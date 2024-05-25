@@ -43,7 +43,7 @@ pub trait CryptoKey {
 
 /// Trait defining the common functionalities of a public-private cryptography key pair.
 pub trait KeyPair: CryptoKey + Signer {
-    type Public: CryptoKey;
+    type Public: CryptoKey + Verifier;
     type Private: CryptoKey + Signer;
     /// Generates a new key pair with the specified key bit length and persistence level.
     ///
@@ -69,5 +69,19 @@ pub trait Signer {
             .collect::<Result<_>>()?;
 
         Ok(marshal_bytes(&content))
+    }
+}
+
+pub trait Verifier {
+    fn verify(&self, message: &[u8]) -> Result<bool>;
+    fn verify_chunked(&self, message: &[u8]) -> Result<bool> {
+        let x = unmarshal_bytes(message)
+            .iter()
+            .any(|chunk| match self.verify(&chunk) {
+                Ok(true) => false,
+                _ => true,
+            });
+
+        Ok(!x)
     }
 }
