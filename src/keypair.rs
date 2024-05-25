@@ -38,9 +38,9 @@ pub trait PrivateKey {
         let bytes: Vec<u8> = unmarshal_bytes(message)
             .iter()
             .map(|chunk| {
-                self.decrypt(chunk).and_then(|mut v| {
+                self.decrypt(chunk).map(|mut v| {
                     v.pop();
-                    Ok(v)
+                    v
                 })
             })
             .collect::<Result<Vec<_>>>()?
@@ -57,10 +57,7 @@ pub trait PublicKey {
     fn verify_chunked(&self, message: &[u8]) -> Result<bool> {
         let x = unmarshal_bytes(message)
             .iter()
-            .any(|chunk| match self.verify(&chunk) {
-                Ok(true) => false,
-                _ => true,
-            });
+            .any(|chunk| !matches!(self.verify(chunk), Ok(true)));
 
         Ok(!x)
     }

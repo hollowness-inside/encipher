@@ -19,7 +19,7 @@ pub struct ElGamalPrivate {
 
 impl PrivateKey for ElGamalPrivate {
     fn sign(&self, bytes: &[u8]) -> Result<Vec<u8>> {
-        let message = UBig::from_le_bytes(&bytes);
+        let message = UBig::from_le_bytes(bytes);
         if message > self.prime {
             return Err(Error::SmallKey);
         }

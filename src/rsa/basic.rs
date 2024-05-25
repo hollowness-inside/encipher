@@ -4,7 +4,7 @@ use ibig_ext::powmod::PowMod;
 use crate::result::{Error, Result};
 
 pub(super) fn rsa_encrypt(bytes: &[u8], exponent: &UBig, divisor: &UBig) -> Result<Vec<u8>> {
-    let message = UBig::from_le_bytes(&bytes);
+    let message = UBig::from_le_bytes(bytes);
     if &message >= divisor {
         return Err(Error::SmallKey);
     }

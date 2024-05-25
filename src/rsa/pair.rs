@@ -79,7 +79,7 @@ impl PrivateKey for RsaKeyPair {
 }
 
 impl PublicKey for RsaKeyPair {
-    fn verify(&self, message: &[u8]) -> Result<bool> {
+    fn verify(&self, _message: &[u8]) -> Result<bool> {
         unimplemented!()
     }
 
