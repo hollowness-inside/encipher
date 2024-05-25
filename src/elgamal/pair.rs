@@ -87,8 +87,8 @@ impl PrivateKey for ElGamalKeyPair {
 }
 
 impl PublicKey for ElGamalKeyPair {
-    fn verify(&self, _message: &[u8]) -> Result<bool> {
-        todo!()
+    fn verify(&self, message: &[u8]) -> Result<bool> {
+        self.public.verify(message)
     }
 
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {

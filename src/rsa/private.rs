@@ -1,6 +1,6 @@
 use ibig::UBig;
 
-use super::basic::rsa_decrypt;
+use super::basic::{rsa_decrypt, rsa_encrypt};
 use crate::{keypair::PrivateKey, result::Result};
 
 /// Private key for the RSA algorithm.
@@ -26,8 +26,9 @@ pub struct RsaPrivate {
 // }
 
 impl PrivateKey for RsaPrivate {
-    fn sign(&self, _message: &[u8]) -> Result<Vec<u8>> {
-        todo!()
+    fn sign(&self, message: &[u8]) -> Result<Vec<u8>> {
+        let div = &self.prime_1 * &self.prime_2;
+        rsa_encrypt(message, &self.exponent, &div)
     }
 
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {

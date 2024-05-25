@@ -27,7 +27,6 @@ pub(super) fn rabin_decrypt(message: &[u8], prime_1: &UBig, prime_2: &UBig) -> R
     let v = UBig::try_from(v).expect("Cannot convert v to UBig");
 
     let mp1: UBig = message.clone().square_root_mod(prime_1).expect("No root").0;
-
     let mp2: UBig = message.square_root_mod(prime_2).expect("No root").0;
 
     let n = &p1 * &p2;

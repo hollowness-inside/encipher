@@ -80,8 +80,8 @@ impl PrivateKey for RabinKeyPair {
 }
 
 impl PublicKey for RabinKeyPair {
-    fn verify(&self, _message: &[u8]) -> Result<bool> {
-        todo!()
+    fn verify(&self, message: &[u8]) -> Result<bool> {
+        self.public.verify(message)
     }
 
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
