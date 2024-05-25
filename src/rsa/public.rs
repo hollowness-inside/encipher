@@ -1,7 +1,8 @@
 use ibig::UBig;
 
 use super::basic::{rsa_decrypt, rsa_encrypt};
-use crate::{keypair::CryptoKey, result::Result};
+use crate::keypair::PublicKey;
+use crate::result::Result;
 
 /// Public key for the RSA algorithm.
 #[derive(Debug, Clone)]
@@ -14,14 +15,19 @@ pub struct RsaPublic {
     pub divisor: UBig,
 }
 
-impl CryptoKey for RsaPublic {
-    #[inline]
+// impl CryptoKey for RsaPublic {
+//     #[inline]
+//     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
+//         rsa_decrypt(message, &self.exponent, &self.divisor)
+//     }
+// }
+
+impl PublicKey for RsaPublic {
+    fn verify(&self, message: &[u8]) -> Result<bool> {
+        unimplemented!()
+    }
+    
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
         rsa_encrypt(bytes, &self.exponent, &self.divisor)
-    }
-
-    #[inline]
-    fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
-        rsa_decrypt(message, &self.exponent, &self.divisor)
     }
 }

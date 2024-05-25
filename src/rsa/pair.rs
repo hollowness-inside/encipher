@@ -2,8 +2,8 @@ use ibig::{ubig, UBig};
 use ibig_ext::prime_gen::gen_sized_prime;
 
 use super::{RsaPrivate, RsaPublic};
-use crate::keypair::{CryptoKey, KeyPair, Signer};
-use crate::result::Result;
+use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
+            result::Result};
 
 /// An RSA key pair for encryption and decryption.
 #[derive(Debug, Clone)]
@@ -60,18 +60,6 @@ impl KeyPair for RsaKeyPair {
     }
 }
 
-impl CryptoKey for RsaKeyPair {
-    #[inline]
-    fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
-        self.public.encrypt(bytes)
-    }
-
-    #[inline]
-    fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
-        self.private.decrypt(message)
-    }
-}
-
 impl RsaKeyPair {
     /// Creates a new RSA key pair with a default persistence level of 10.
     #[inline]
@@ -80,8 +68,22 @@ impl RsaKeyPair {
     }
 }
 
-impl Signer for RsaKeyPair {
+impl PrivateKey for RsaKeyPair {
     fn sign(&self, message: &[u8]) -> Result<Vec<u8>> {
         self.private.sign(message)
+    }
+
+    fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
+        self.private.decrypt(message)
+    }
+}
+
+impl PublicKey for RsaKeyPair {
+    fn verify(&self, message: &[u8]) -> Result<bool> {
+        unimplemented!()
+    }
+
+    fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
+        self.public.encrypt(bytes)
     }
 }

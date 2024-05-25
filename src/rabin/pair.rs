@@ -2,7 +2,7 @@ use ibig::UBig;
 use ibig_ext::prime_gen::gen_sized_prime;
 
 use super::{private::RabinPrivate, public::RabinPublic};
-use crate::keypair::{CryptoKey, KeyPair, Signer};
+use crate::keypair::{KeyPair, PrivateKey, PublicKey};
 use crate::result::Result;
 
 /// A key pair for the Rabin cryptosystem.
@@ -52,18 +52,6 @@ impl KeyPair for RabinKeyPair {
     }
 }
 
-impl CryptoKey for RabinKeyPair {
-    #[inline]
-    fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
-        self.public.encrypt(bytes)
-    }
-
-    #[inline]
-    fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
-        self.private.decrypt(message)
-    }
-}
-
 fn gen_prime(byte_length: usize, persistence: usize) -> UBig {
     loop {
         let p = gen_sized_prime(byte_length, persistence);
@@ -81,8 +69,22 @@ impl RabinKeyPair {
     }
 }
 
-impl Signer for RabinKeyPair {
+impl PrivateKey for RabinKeyPair {
     fn sign(&self, message: &[u8]) -> Result<Vec<u8>> {
         self.private.sign(message)
+    }
+    
+    fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
+        self.private.decrypt(message)
+    }
+}
+
+impl PublicKey for RabinKeyPair {
+    fn verify(&self, message: &[u8]) -> Result<bool> {
+        todo!()
+    }
+
+    fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
+        self.public.encrypt(bytes)
     }
 }

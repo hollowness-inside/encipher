@@ -3,7 +3,7 @@ use ibig_ext::powmod::PowMod;
 use rand::Rng;
 
 use super::basic::elgamal_decrypt;
-use crate::{keypair::{CryptoKey, Signer},
+use crate::{keypair::PrivateKey,
             result::{Error, Result},
             utils::marshal_bytes};
 
@@ -17,19 +17,7 @@ pub struct ElGamalPrivate {
     pub key: UBig,
 }
 
-impl CryptoKey for ElGamalPrivate {
-    #[inline]
-    fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
-        elgamal_decrypt(message, &self.prime, &self.key)
-    }
-
-    #[inline]
-    fn encrypt(&self, _bytes: &[u8]) -> Result<Vec<u8>> {
-        unimplemented!()
-    }
-}
-
-impl Signer for ElGamalPrivate {
+impl PrivateKey for ElGamalPrivate {
     fn sign(&self, bytes: &[u8]) -> Result<Vec<u8>> {
         let message = UBig::from_le_bytes(&bytes);
         if message > self.prime {
@@ -47,5 +35,9 @@ impl Signer for ElGamalPrivate {
             sigma.to_le_bytes(),
             delta.to_le_bytes(),
         ]))
+    }
+
+    fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
+        elgamal_decrypt(message, &self.prime, &self.key)
     }
 }
