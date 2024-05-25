@@ -22,8 +22,8 @@ pub(super) fn elgamal_encrypt(
     let c1 = alpha.powmod(r.clone(), prime);
     let c2 = message * beta.powmod(r, prime);
 
-    let c1_bytes = c1.to_be_bytes();
-    let c2_bytes = c2.to_be_bytes();
+    let c1_bytes = c1.to_le_bytes();
+    let c2_bytes = c2.to_le_bytes();
 
     let output = vec![c1_bytes, c2_bytes];
     let output = marshal_bytes(&output);
@@ -35,8 +35,8 @@ pub(super) fn elgamal_decrypt(message: &[u8], prime: &UBig, key: &UBig) -> Resul
     let c1 = cs[0].as_slice();
     let c2 = cs[1].as_slice();
 
-    let c1 = UBig::from_be_bytes(c1);
-    let c2 = UBig::from_be_bytes(c2);
+    let c1 = UBig::from_le_bytes(c1);
+    let c2 = UBig::from_le_bytes(c2);
 
     let (_, c1_inv, _) = c1.extended_gcd(prime);
     let c1_inv: UBig = c1_inv.try_into().map_err(|_| Error::MathError)?;
