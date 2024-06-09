@@ -13,21 +13,6 @@ pub struct ElGamalPublic {
     pub beta: UBig,
 }
 
-// impl CryptoKey for ElGamalPublic {
-//     #[inline]
-//     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
-//         let cs = unmarshal_bytes(message);
-//         let sigma = cs[0].as_slice();
-//         let delta = cs[1].as_slice();
-
-//         let sigma = UBig::from_le_bytes(sigma);
-//         let delta = UBig::from_le_bytes(delta);
-
-//         let m = self.beta.powmod(sigma.clone(), &self.prime) * sigma.powmod(delta, &self.prime);
-//         Ok(m.to_le_bytes())
-//     }
-// }
-
 impl PublicKey for ElGamalPublic {
     fn verify<H: Fn(&[u8]) -> Vec<u8>>(
         &self,

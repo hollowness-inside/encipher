@@ -70,7 +70,7 @@ pub trait PublicKey {
         expected: &[u8],
         signed_data: &[u8],
         chunk_size: usize,
-        hashf: &H
+        hashf: &H,
     ) -> Result<bool> {
         let x = unmarshal_bytes(signed_data)
             .iter()
