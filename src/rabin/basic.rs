@@ -8,13 +8,13 @@ pub(super) fn rabin_encrypt(message: &[u8], divisor: &UBig) -> Result<Vec<u8>> {
     let mut message = message.to_vec();
     message.extend(MAGIC);
 
-    let message = UBig::from_le_bytes(&message);
+    let message = UBig::from_be_bytes(&message);
     if &message >= divisor {
         return Err(Error::SmallKey);
     }
 
     let message = message.powmod(ubig!(2), divisor);
-    Ok(message.to_le_bytes())
+    Ok(message.to_be_bytes())
 }
 
 pub(super) fn rabin_decrypt(message: &[u8], prime_1: &UBig, prime_2: &UBig) -> Result<Vec<u8>> {
@@ -22,7 +22,7 @@ pub(super) fn rabin_decrypt(message: &[u8], prime_1: &UBig, prime_2: &UBig) -> R
     let p2 = prime_2.clone();
 
     let (_, u, v) = prime_1.extended_gcd(prime_2);
-    let message = UBig::from_le_bytes(message);
+    let message = UBig::from_be_bytes(message);
     let u = UBig::try_from(u).expect("Cannot convert u to UBig");
     let v = UBig::try_from(v).expect("Cannot convert v to UBig");
 
@@ -36,7 +36,7 @@ pub(super) fn rabin_decrypt(message: &[u8], prime_1: &UBig, prime_2: &UBig) -> R
     let m4: UBig = &n - &m3;
 
     for m in [m1, m2, m3, m4] {
-        let m = m.to_le_bytes();
+        let m = m.to_be_bytes();
         if m.ends_with(MAGIC) {
             return Ok(m);
         }

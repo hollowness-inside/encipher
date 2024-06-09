@@ -43,8 +43,8 @@ impl PrivateKey for ElGamalPrivate {
         };
 
         Ok(marshal_bytes(&vec![
-            sigma.to_le_bytes(),
-            delta.to_le_bytes(),
+            sigma.to_be_bytes(),
+            delta.to_be_bytes(),
         ]))
     }
 

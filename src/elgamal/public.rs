@@ -21,8 +21,8 @@ impl PublicKey for ElGamalPublic {
         hashf: &H,
     ) -> Result<bool> {
         let sd = unmarshal_bytes(signed_data);
-        let sigma = UBig::from_le_bytes(&sd[0]);
-        let delta = UBig::from_le_bytes(&sd[1]);
+        let sigma = UBig::from_be_bytes(&sd[0]);
+        let delta = UBig::from_be_bytes(&sd[1]);
 
         let lhs = (self.beta.powmod(sigma.clone(), &self.prime) * sigma.powmod(delta, &self.prime))
             % &self.prime;
