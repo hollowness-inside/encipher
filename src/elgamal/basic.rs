@@ -1,4 +1,4 @@
-use ibig::{ubig, UBig};
+use ibig::{ubig, IBig, UBig};
 use ibig_ext::powmod::PowMod;
 use rand::Rng;
 
@@ -39,9 +39,10 @@ pub(super) fn elgamal_decrypt(message: &[u8], prime: &UBig, key: &UBig) -> Resul
     let c2 = UBig::from_le_bytes(c2);
 
     let (_, c1_inv, _) = c1.extended_gcd(prime);
+    let c1_inv = c1_inv.powmod(key.clone(), &IBig::from(prime));
     let c1_inv: UBig = c1_inv.try_into().map_err(|_| Error::MathError)?;
 
-    let message = (c2 * c1_inv.powmod(key.clone(), prime)) % prime;
+    let message = (c2 * c1_inv) % prime;
     let bytes = message.to_le_bytes();
 
     Ok(bytes[0..bytes.len()].to_vec())

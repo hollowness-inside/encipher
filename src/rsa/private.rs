@@ -18,9 +18,11 @@ pub struct RsaPrivate {
 }
 
 impl PrivateKey for RsaPrivate {
-    fn sign(&self, message: &[u8]) -> Result<Vec<u8>> {
+    fn sign<H: Fn(&[u8]) -> Vec<u8>>(&self, message: &[u8], hashf: &H) -> Result<Vec<u8>> {
+        let message = hashf(message);
+
         let div = &self.prime_1 * &self.prime_2;
-        rsa_encrypt(message, &self.exponent, &div)
+        rsa_encrypt(&message, &self.exponent, &div)
     }
 
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {

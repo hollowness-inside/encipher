@@ -12,7 +12,12 @@ pub struct RabinPublic {
 }
 
 impl PublicKey for RabinPublic {
-    fn verify(&self, _expected: &[u8], _signed_data: &[u8]) -> Result<bool> {
+    fn verify<H: Fn(&[u8]) -> Vec<u8>>(
+        &self,
+        _expected: &[u8],
+        _signed_data: &[u8],
+        _hashf: &H,
+    ) -> Result<bool> {
         todo!()
     }
 

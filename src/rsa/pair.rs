@@ -1,4 +1,4 @@
-use ibig::{ubig, UBig};
+use ibig::{ops::RemEuclid, ubig, IBig, UBig};
 use ibig_ext::prime_gen::gen_sized_prime;
 
 use super::{RsaPrivate, RsaPublic};
@@ -34,6 +34,7 @@ impl KeyPair for RsaKeyPair {
 
         let e: UBig = ubig!(2).pow(16) + 1;
         let (_, d, _) = e.extended_gcd(&totient);
+        let d = d.rem_euclid(IBig::from(totient));
         let d: UBig = d.try_into().expect("Cannot convert d to UBig");
 
         Self {
@@ -70,8 +71,8 @@ impl RsaKeyPair {
 
 impl PrivateKey for RsaKeyPair {
     #[inline]
-    fn sign(&self, message: &[u8]) -> Result<Vec<u8>> {
-        self.private.sign(message)
+    fn sign<H: Fn(&[u8]) -> Vec<u8>>(&self, message: &[u8], hashf: &H) -> Result<Vec<u8>> {
+        self.private.sign(message, hashf)
     }
 
     #[inline]
@@ -82,8 +83,13 @@ impl PrivateKey for RsaKeyPair {
 
 impl PublicKey for RsaKeyPair {
     #[inline]
-    fn verify(&self, expected: &[u8], message: &[u8]) -> Result<bool> {
-        self.public.verify(expected, message)
+    fn verify<H: Fn(&[u8]) -> Vec<u8>>(
+        &self,
+        expected: &[u8],
+        message: &[u8],
+        hashf: &H,
+    ) -> Result<bool> {
+        self.public.verify(expected, message, hashf)
     }
 
     #[inline]

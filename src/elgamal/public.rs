@@ -1,7 +1,8 @@
 use ibig::UBig;
+use ibig_ext::powmod::PowMod;
 
 use super::basic::elgamal_encrypt;
-use crate::{keypair::PublicKey, result::Result};
+use crate::{keypair::PublicKey, result::Result, utils::unmarshal_bytes};
 
 /// Public key for the ElGamal cryptosystem.
 #[derive(Debug, Clone)]
@@ -28,8 +29,25 @@ pub struct ElGamalPublic {
 // }
 
 impl PublicKey for ElGamalPublic {
-    fn verify(&self, _expected: &[u8], _signed_data: &[u8]) -> Result<bool> {
-        todo!()
+    fn verify<H: Fn(&[u8]) -> Vec<u8>>(
+        &self,
+        expected: &[u8],
+        signed_data: &[u8],
+        hashf: &H,
+    ) -> Result<bool> {
+        let sd = unmarshal_bytes(signed_data);
+        let sigma = UBig::from_le_bytes(&sd[0]);
+        let delta = UBig::from_le_bytes(&sd[1]);
+
+        let lhs = (self.beta.powmod(sigma.clone(), &self.prime) * sigma.powmod(delta, &self.prime))
+            % &self.prime;
+
+        let msg_hash = hashf(expected);
+        let msg_hash = UBig::from_be_bytes(&msg_hash);
+
+        let rhs = self.alpha.powmod(msg_hash, &self.prime);
+
+        Ok(lhs == rhs)
     }
 
     #[inline]

@@ -16,7 +16,13 @@ pub struct RsaPublic {
 
 impl PublicKey for RsaPublic {
     #[inline]
-    fn verify(&self, expected: &[u8], signed_data: &[u8]) -> Result<bool> {
+    fn verify<H: Fn(&[u8]) -> Vec<u8>>(
+        &self,
+        expected: &[u8],
+        signed_data: &[u8],
+        hashf: &H,
+    ) -> Result<bool> {
+        let expected = hashf(expected);
         rsa_decrypt(signed_data, &self.exponent, &self.divisor).map(|x| x != expected)
     }
 

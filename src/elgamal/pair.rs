@@ -30,15 +30,14 @@ impl KeyPair for ElGamalKeyPair {
         let mut rng = rand::thread_rng();
 
         let prime = gen_sized_prime(bit_length, persistence);
-        let key = rng.gen_range(ubig!(1)..=&prime - 2);
-
         let alpha = loop {
-            let i = rng.gen_range(ubig!(3)..=&prime - 2);
+            let i = rng.gen_range(ubig!(3)..&prime - 1);
             if i.powmod(&prime - 1, &prime) == ubig!(1) {
                 break i;
             }
         };
 
+        let key = rng.gen_range(ubig!(1)..&prime - 1);
         let beta = alpha.powmod(key.clone(), &prime);
 
         Self {
@@ -78,8 +77,8 @@ impl ElGamalKeyPair {
 
 impl PrivateKey for ElGamalKeyPair {
     #[inline]
-    fn sign(&self, message: &[u8]) -> Result<Vec<u8>> {
-        self.private.sign(message)
+    fn sign<H: Fn(&[u8]) -> Vec<u8>>(&self, message: &[u8], hashf: &H) -> Result<Vec<u8>> {
+        self.private.sign(message, &hashf)
     }
 
     #[inline]
@@ -90,8 +89,13 @@ impl PrivateKey for ElGamalKeyPair {
 
 impl PublicKey for ElGamalKeyPair {
     #[inline]
-    fn verify(&self, expected: &[u8], signed_data: &[u8]) -> Result<bool> {
-        self.public.verify(expected, signed_data)
+    fn verify<H: Fn(&[u8]) -> Vec<u8>>(
+        &self,
+        expected: &[u8],
+        signed_data: &[u8],
+        hashf: &H,
+    ) -> Result<bool> {
+        self.public.verify(expected, signed_data, hashf)
     }
 
     #[inline]
