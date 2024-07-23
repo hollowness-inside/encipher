@@ -24,11 +24,8 @@ fn test_sign_verify() {
 
     let key = RsaKeyPair::new(128, 5);
 
-    let signed = key.private.sign_chunked(&MESSAGE, hashf, 16).unwrap();
-    let verified = key
-        .public
-        .verify_chunked(&MESSAGE, &signed, hashf, 16)
-        .unwrap();
+    let signed = key.sign_chunked(&MESSAGE, hashf, 16).unwrap();
+    let verified = key.verify_chunked(&MESSAGE, &signed, hashf, 16).unwrap();
 
     assert!(verified);
 }

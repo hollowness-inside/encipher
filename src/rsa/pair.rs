@@ -3,6 +3,7 @@ use ibig_ext::prime_gen::gen_sized_prime;
 
 use super::{RsaPrivate, RsaPublic};
 use crate::{result::Result, PrivateKey, PublicKey};
+use crate::{Signer, Verifier};
 
 /// An RSA key pair for encryption and decryption.
 #[derive(Debug, Clone)]
@@ -59,5 +60,24 @@ impl PublicKey for RsaKeyPair {
     #[inline]
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
         self.public.encrypt(bytes)
+    }
+}
+
+impl Verifier for RsaKeyPair {
+    #[inline]
+    fn verify(
+        &self,
+        expected: &[u8],
+        signed_data: &[u8],
+        hashf: fn(&[u8]) -> Vec<u8>,
+    ) -> Result<bool> {
+        self.public.verify(expected, signed_data, hashf)
+    }
+}
+
+impl Signer for RsaKeyPair {
+    #[inline]
+    fn sign(&self, data: &[u8], hashf: fn(&[u8]) -> Vec<u8>) -> Result<Vec<u8>> {
+        self.private.sign(data, hashf)
     }
 }
