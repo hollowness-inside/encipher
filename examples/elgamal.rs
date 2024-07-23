@@ -3,7 +3,7 @@ use encipher::{elgamal::ElGamalKeyPair, KeyPair, PrivateKey, PublicKey};
 fn main() {
     let message = b"Hello World";
 
-    let key = ElGamalKeyPair::generate(128, 10);
+    let key = ElGamalKeyPair::new(128, 10);
     println!("{key:#?}\n");
 
     // Using key directly

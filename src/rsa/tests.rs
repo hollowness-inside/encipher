@@ -5,7 +5,7 @@ const MESSAGE: [u8; 445] = *b"Lorem ipsum dolor sit amet, consectetur adipiscing
 
 #[test]
 fn test_encrypt_decrypt() {
-    let key = RsaKeyPair::generate(128, 5);
+    let key = RsaKeyPair::new(128, 5);
 
     let encrypted = key.public().encrypt_chunked(&MESSAGE, 8).unwrap();
     let decrypted = key.private().decrypt_chunked(&encrypted, 8).unwrap();

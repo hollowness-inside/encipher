@@ -7,13 +7,7 @@ use crate::{
 pub trait KeyPair {
     type Public: PublicKey;
     type Private: PrivateKey;
-    /// Generates a new key pair with the specified key bit length and persistence level.
-    ///
-    /// * `bit_length`: The desired bit length for the keys in the pair.
-    /// * `persistence`: The persistence level of the key pair (e.g., in-memory, file storage).
-    ///
-    /// Returns the newly generated `Self` instance representing the key pair.
-    fn generate(bit_length: usize, persistence: usize) -> Self;
+
     fn public(&self) -> &Self::Public;
     fn private(&self) -> &Self::Private;
 }

@@ -4,7 +4,7 @@ use encipher::{KeyPair, PrivateKey, PublicKey};
 fn main() {
     let message = b"Hello World";
 
-    let key = RsaKeyPair::generate(128, 10);
+    let key = RsaKeyPair::new(128, 10);
     println!("{key:#?}\n");
 
     // Using key directly

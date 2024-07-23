@@ -3,7 +3,7 @@ use encipher::{rabin::RabinKeyPair, KeyPair, PrivateKey, PublicKey};
 fn main() {
     let message = b"Hello World";
 
-    let key = RabinKeyPair::generate(128, 10);
+    let key = RabinKeyPair::new(128, 10);
     println!("{key:#?}\n");
 
     // Using key directly

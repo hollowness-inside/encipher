@@ -19,13 +19,26 @@ pub struct ElGamalKeyPair {
 impl KeyPair for ElGamalKeyPair {
     type Public = ElGamalPublic;
     type Private = ElGamalPrivate;
+
+    #[inline]
+    fn public(&self) -> &Self::Public {
+        &self.public
+    }
+
+    #[inline]
+    fn private(&self) -> &Self::Private {
+        &self.private
+    }
+}
+
+impl ElGamalKeyPair {
     /// Generates a new ElGamal key pair with the specified bit length and persistence level.
     ///
     /// * `bit_length`: The desired bit length for the keys in the pair.
     /// * `persistence`: The number of iterations for checking numbers for primality.
     ///
     /// Returns a newly generated `ElGamalKeyPair` instance.
-    fn generate(bit_length: usize, persistence: usize) -> Self {
+    pub fn new(bit_length: usize, persistence: usize) -> Self {
         let mut rng = rand::thread_rng();
 
         let prime = gen_sized_prime(bit_length, persistence);
@@ -53,24 +66,6 @@ impl KeyPair for ElGamalKeyPair {
                 beta,
             },
         }
-    }
-
-    #[inline]
-    fn public(&self) -> &Self::Public {
-        &self.public
-    }
-
-    #[inline]
-    fn private(&self) -> &Self::Private {
-        &self.private
-    }
-}
-
-impl ElGamalKeyPair {
-    /// Creates a new ElGamal key pair with a default bit length and persistence level.
-    #[inline]
-    pub fn new(bit_length: usize) -> Self {
-        Self::generate(bit_length, 10)
     }
 }
 

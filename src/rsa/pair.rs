@@ -15,16 +15,14 @@ pub struct RsaKeyPair {
     private: RsaPrivate,
 }
 
-impl KeyPair for RsaKeyPair {
-    type Public = RsaPublic;
-    type Private = RsaPrivate;
+impl RsaKeyPair {
     /// Generates a new RSA key pair with the specified bit length and persistence level.
     ///
     /// * `bit_length`: The desired bit length for the keys in the pair.
     /// * `persistence`: The number of iterations for checking numbers for primality.
     ///
     /// Returns the newly generated `RsaKeyPair` instance.
-    fn generate(bit_length: usize, persistence: usize) -> Self {
+    pub fn new(bit_length: usize, persistence: usize) -> Self {
         let p = gen_sized_prime(bit_length, persistence);
         let q = gen_sized_prime(bit_length, persistence);
 
@@ -48,6 +46,11 @@ impl KeyPair for RsaKeyPair {
             },
         }
     }
+}
+
+impl KeyPair for RsaKeyPair {
+    type Public = RsaPublic;
+    type Private = RsaPrivate;
 
     #[inline]
     fn public(&self) -> &Self::Public {
@@ -57,14 +60,6 @@ impl KeyPair for RsaKeyPair {
     #[inline]
     fn private(&self) -> &Self::Private {
         &self.private
-    }
-}
-
-impl RsaKeyPair {
-    /// Creates a new RSA key pair with a default persistence level of 10.
-    #[inline]
-    pub fn new(bit_length: usize) -> Self {
-        Self::generate(bit_length, 10)
     }
 }
 
