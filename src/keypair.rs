@@ -36,7 +36,23 @@ pub trait PrivateKey {
     }
 }
 
-pub trait Signer {}
+pub trait Signer {
+    fn sign(&self, data: &[u8], hashf: fn(&[u8]) -> Vec<u8>) -> Result<Vec<u8>>;
+
+    fn sign_chunked(
+        &self,
+        data: &[u8],
+        hashf: fn(&[u8]) -> Vec<u8>,
+        chunk_size: usize,
+    ) -> Result<Vec<u8>> {
+        let signed_chunks: Vec<Vec<u8>> = data
+            .chunks(chunk_size)
+            .map(|chunk| self.sign(chunk, hashf))
+            .collect::<Result<_>>()?;
+
+        Ok(marshal_bytes(&signed_chunks))
+    }
+}
 
 pub trait Verifier {
     fn verify(
