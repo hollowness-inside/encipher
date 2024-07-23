@@ -70,27 +70,12 @@ impl RsaKeyPair {
 
 impl PrivateKey for RsaKeyPair {
     #[inline]
-    fn sign<H: Fn(&[u8]) -> Vec<u8>>(&self, message: &[u8], hashf: &H) -> Result<Vec<u8>> {
-        self.private.sign(message, hashf)
-    }
-
-    #[inline]
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         self.private.decrypt(message)
     }
 }
 
 impl PublicKey for RsaKeyPair {
-    #[inline]
-    fn verify<H: Fn(&[u8]) -> Vec<u8>>(
-        &self,
-        expected: &[u8],
-        message: &[u8],
-        hashf: &H,
-    ) -> Result<bool> {
-        self.public.verify(expected, message, hashf)
-    }
-
     #[inline]
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
         self.public.encrypt(bytes)

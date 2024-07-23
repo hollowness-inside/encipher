@@ -19,25 +19,6 @@ pub trait KeyPair {
 }
 
 pub trait PrivateKey {
-    fn sign<H: Fn(&[u8]) -> Vec<u8>>(&self, message: &[u8], hashf: &H) -> Result<Vec<u8>>;
-    fn sign_chunked<H: Fn(&[u8]) -> Vec<u8>>(
-        &self,
-        message: &[u8],
-        chunk_size: usize,
-        hashf: &H,
-    ) -> Result<Vec<u8>> {
-        let content: Vec<Vec<_>> = pad_message(message, chunk_size)
-            .chunks(chunk_size - 1)
-            .map(|chunk| {
-                let mut chunk = chunk.to_vec();
-                chunk.push(0x01);
-                self.sign(&chunk, hashf)
-            })
-            .collect::<Result<_>>()?;
-
-        Ok(marshal_bytes(&content))
-    }
-
     /// Decrypts an encrypted slice using the public key.
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>>;
     /// Unmarshalls the given slice containing chunks and then decrypts each separately using the public key.
@@ -60,28 +41,6 @@ pub trait PrivateKey {
 }
 
 pub trait PublicKey {
-    fn verify<H: Fn(&[u8]) -> Vec<u8>>(
-        &self,
-        expected: &[u8],
-        signed_data: &[u8],
-        hashf: &H,
-    ) -> Result<bool>;
-
-    fn verify_chunked<H: Fn(&[u8]) -> Vec<u8>>(
-        &self,
-        expected: &[u8],
-        signed_data: &[u8],
-        chunk_size: usize,
-        hashf: &H,
-    ) -> Result<bool> {
-        let x = unmarshal_bytes(signed_data)
-            .iter()
-            .zip(expected.chunks(chunk_size))
-            .any(|(exp, chunk)| !matches!(self.verify(exp, chunk, hashf), Ok(true)));
-
-        Ok(!x)
-    }
-
     /// Encrypts a byte slice using the public key.
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>>;
 

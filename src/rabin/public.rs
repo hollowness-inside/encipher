@@ -12,15 +12,6 @@ pub struct RabinPublic {
 }
 
 impl PublicKey for RabinPublic {
-    fn verify<H: Fn(&[u8]) -> Vec<u8>>(
-        &self,
-        _expected: &[u8],
-        _signed_data: &[u8],
-        _hashf: &H,
-    ) -> Result<bool> {
-        todo!()
-    }
-
     #[inline]
     fn encrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         rabin_encrypt(message, &self.divisor)

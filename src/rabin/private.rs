@@ -15,10 +15,6 @@ pub struct RabinPrivate {
 }
 
 impl PrivateKey for RabinPrivate {
-    fn sign<H: Fn(&[u8]) -> Vec<u8>>(&self, _message: &[u8], _hashf: &H) -> Result<Vec<u8>> {
-        unimplemented!()
-    }
-
     #[inline]
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         rabin_decrypt(message, &self.prime_1, &self.prime_2)

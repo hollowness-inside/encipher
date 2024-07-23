@@ -70,27 +70,12 @@ impl RabinKeyPair {
 
 impl PrivateKey for RabinKeyPair {
     #[inline]
-    fn sign<H: Fn(&[u8]) -> Vec<u8>>(&self, message: &[u8], hashf: &H) -> Result<Vec<u8>> {
-        self.private.sign(message, hashf)
-    }
-
-    #[inline]
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         self.private.decrypt(message)
     }
 }
 
 impl PublicKey for RabinKeyPair {
-    #[inline]
-    fn verify<H: Fn(&[u8]) -> Vec<u8>>(
-        &self,
-        expected: &[u8],
-        signed_data: &[u8],
-        hashf: &H,
-    ) -> Result<bool> {
-        self.public.verify(expected, signed_data, hashf)
-    }
-
     #[inline]
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
         self.public.encrypt(bytes)
