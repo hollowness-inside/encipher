@@ -40,16 +40,11 @@ impl ElGamalKeyPair {
         Self {
             public: ElGamalPublic {
                 prime: prime.clone(),
-                alpha: alpha.clone(),
-                beta: beta.clone(),
-            },
-
-            private: ElGamalPrivate {
-                prime,
-                key,
                 alpha,
                 beta,
             },
+
+            private: ElGamalPrivate { prime, key },
         }
     }
 }

@@ -7,8 +7,6 @@ use crate::{keypair::PrivateKey, result::Result};
 #[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ElGamalPrivate {
-    pub alpha: UBig,
-    pub beta: UBig,
     pub prime: UBig,
     pub key: UBig,
 }
