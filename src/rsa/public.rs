@@ -18,14 +18,12 @@ pub struct RsaPublic {
 impl PublicKey for RsaPublic {
     #[inline]
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
-        let exponent = &self.exponent;
-        let divisor = &self.divisor;
         let message = UBig::from_be_bytes(bytes);
-        if &message >= divisor {
+        if message >= self.divisor {
             return Err(Error::SmallKey);
         }
 
-        let message = message.powmod(exponent.clone(), divisor);
+        let message = message.powmod(self.exponent.clone(), &self.divisor);
         Ok(message.to_be_bytes())
     }
 }

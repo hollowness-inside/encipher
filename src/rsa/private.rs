@@ -20,10 +20,8 @@ pub struct RsaPrivate {
 impl PrivateKey for RsaPrivate {
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         let div = &self.prime_1 * &self.prime_2;
-        let exponent = &self.exponent;
-        let divisor = &div;
         let message = UBig::from_be_bytes(message);
-        let out = message.powmod(exponent.clone(), divisor);
+        let out = message.powmod(self.exponent.clone(), &div);
 
         Ok(out.to_be_bytes())
     }
