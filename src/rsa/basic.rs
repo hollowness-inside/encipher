@@ -16,7 +16,6 @@ pub(super) fn rsa_encrypt(bytes: &[u8], exponent: &UBig, divisor: &UBig) -> Resu
 pub(super) fn rsa_decrypt(message: &[u8], exponent: &UBig, divisor: &UBig) -> Result<Vec<u8>> {
     let message = UBig::from_be_bytes(message);
     let out = message.powmod(exponent.clone(), divisor);
-    let bytes = out.to_be_bytes();
 
-    Ok(bytes[0..bytes.len()].to_vec())
+    Ok(out.to_be_bytes())
 }

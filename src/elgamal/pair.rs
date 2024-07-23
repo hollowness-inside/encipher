@@ -3,7 +3,7 @@ use ibig_ext::{powmod::PowMod, prime_gen::gen_sized_prime};
 use rand::Rng;
 
 use super::{ElGamalPrivate, ElGamalPublic};
-use crate::{result::Result, KeyPair, PrivateKey, PublicKey};
+use crate::{result::Result, PrivateKey, PublicKey};
 
 /// A key pair for the ElGamal cryptosystem.
 #[derive(Debug, Clone)]
@@ -14,21 +14,6 @@ pub struct ElGamalKeyPair {
 
     /// The private key for decryption.
     private: ElGamalPrivate,
-}
-
-impl KeyPair for ElGamalKeyPair {
-    type Public = ElGamalPublic;
-    type Private = ElGamalPrivate;
-
-    #[inline]
-    fn public(&self) -> &Self::Public {
-        &self.public
-    }
-
-    #[inline]
-    fn private(&self) -> &Self::Private {
-        &self.private
-    }
 }
 
 impl ElGamalKeyPair {

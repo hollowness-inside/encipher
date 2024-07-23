@@ -40,21 +40,6 @@ impl RabinKeyPair {
     }
 }
 
-impl KeyPair for RabinKeyPair {
-    type Public = RabinPublic;
-    type Private = RabinPrivate;
-
-    #[inline]
-    fn public(&self) -> &Self::Public {
-        &self.public
-    }
-
-    #[inline]
-    fn private(&self) -> &Self::Private {
-        &self.private
-    }
-}
-
 impl PrivateKey for RabinKeyPair {
     #[inline]
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {

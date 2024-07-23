@@ -2,7 +2,7 @@ use ibig::{ops::RemEuclid, ubig, IBig, UBig};
 use ibig_ext::prime_gen::gen_sized_prime;
 
 use super::{RsaPrivate, RsaPublic};
-use crate::{result::Result, KeyPair, PrivateKey, PublicKey};
+use crate::{result::Result, PrivateKey, PublicKey};
 
 /// An RSA key pair for encryption and decryption.
 #[derive(Debug, Clone)]
@@ -45,21 +45,6 @@ impl RsaKeyPair {
                 prime_2: q,
             },
         }
-    }
-}
-
-impl KeyPair for RsaKeyPair {
-    type Public = RsaPublic;
-    type Private = RsaPrivate;
-
-    #[inline]
-    fn public(&self) -> &Self::Public {
-        &self.public
-    }
-
-    #[inline]
-    fn private(&self) -> &Self::Private {
-        &self.private
     }
 }
 

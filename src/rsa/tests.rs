@@ -7,8 +7,8 @@ const MESSAGE: [u8; 445] = *b"Lorem ipsum dolor sit amet, consectetur adipiscing
 fn test_encrypt_decrypt() {
     let key = RsaKeyPair::new(128, 5);
 
-    let encrypted = key.public().encrypt_chunked(&MESSAGE, 8).unwrap();
-    let decrypted = key.private().decrypt_chunked(&encrypted, 8).unwrap();
+    let encrypted = key.encrypt_chunked(&MESSAGE, 8).unwrap();
+    let decrypted = key.decrypt_chunked(&encrypted, 8).unwrap();
     assert_eq!(MESSAGE, decrypted.as_slice());
 }
 
