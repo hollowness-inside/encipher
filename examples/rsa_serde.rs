@@ -1,14 +1,20 @@
-use encipher::{rsa::RsaKeyPair, KeyPair, PrivateKey, PublicKey};
+use encipher::rsa::RsaKeyPair;
+use encipher::{KeyPair, PrivateKey, PublicKey};
 
 fn main() {
+    let message = b"Hello World";
+
     let key = RsaKeyPair::generate(128, 10);
-    let key_json = serde_json::to_string_pretty(&key).unwrap();
-    println!("{key_json}\n",);
+    println!("{key:#?}\n");
 
-    let encrypted = key.encrypt_chunked(b"Hello World", 16).unwrap();
-    let e_json = serde_json::to_string_pretty(&encrypted).unwrap();
-    println!("{e_json}\n");
-
+    // Using key directly
+    let encrypted = key.encrypt_chunked(message, 16).unwrap();
     let decrypted = key.decrypt_chunked(&encrypted, 16).unwrap();
+    println!("{encrypted:?}\n");
+    println!("{:#?}\n", String::from_utf8_lossy(&decrypted));
+
+    // Using public and private keys explicitly
+    let encrypted = key.public().encrypt_chunked(message, 16).unwrap();
+    let decrypted = key.private().decrypt_chunked(&encrypted, 16).unwrap();
     println!("{:#?}\n", String::from_utf8_lossy(&decrypted));
 }
