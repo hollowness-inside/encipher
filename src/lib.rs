@@ -6,4 +6,4 @@ mod keypair;
 pub mod rabin;
 pub mod rsa;
 
-pub use keypair::{KeyPair, PrivateKey, PublicKey};
+pub use keypair::{PrivateKey, PublicKey};

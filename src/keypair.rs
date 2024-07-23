@@ -3,9 +3,6 @@ use crate::{
     utils::{marshal_bytes, unmarshal_bytes},
 };
 
-/// Trait defining the common functionalities of a public-private cryptography key pair.
-pub trait KeyPair: PublicKey + PrivateKey + Signer + Verifier {}
-
 pub trait PublicKey {
     /// Encrypts a byte slice using the public key.
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>>;
