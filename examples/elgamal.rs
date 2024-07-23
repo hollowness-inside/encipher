@@ -1,5 +1,4 @@
-use encipher::{elgamal::ElGamalKeyPair,
-               keypair::{KeyPair, PrivateKey, PublicKey}};
+use encipher::{elgamal::ElGamalKeyPair, KeyPair, PrivateKey, PublicKey};
 
 fn main() {
     let message = b"Hello World";
@@ -17,9 +16,4 @@ fn main() {
     let encrypted = key.public().encrypt_chunked(message, 16).unwrap();
     let decrypted = key.private().decrypt_chunked(&encrypted, 16).unwrap();
     println!("{:#?}\n", String::from_utf8_lossy(&decrypted));
-
-    // Sign data
-    let signed = key.sign_chunked(message, 8).unwrap();
-    let verification = key.verify_chunked(message, &signed, 8).unwrap();
-    println!("{verification}");
 }
