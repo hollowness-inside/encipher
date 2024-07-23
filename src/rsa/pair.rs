@@ -2,8 +2,7 @@ use ibig::{ops::RemEuclid, ubig, IBig, UBig};
 use ibig_ext::prime_gen::gen_sized_prime;
 
 use super::{RsaPrivate, RsaPublic};
-use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
-            result::Result};
+use crate::{result::Result, KeyPair, PrivateKey, PublicKey};
 
 /// An RSA key pair for encryption and decryption.
 #[derive(Debug, Clone)]

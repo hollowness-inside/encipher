@@ -1,12 +1,12 @@
+pub mod result;
 mod utils;
 
-pub mod keypair;
-pub mod result;
-pub mod tobytes;
-
 pub mod elgamal;
+mod keypair;
 pub mod rabin;
 pub mod rsa;
 
 #[cfg(test)]
 mod tests;
+
+pub use keypair::{KeyPair, PrivateKey, PublicKey};

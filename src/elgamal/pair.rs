@@ -3,8 +3,7 @@ use ibig_ext::{powmod::PowMod, prime_gen::gen_sized_prime};
 use rand::Rng;
 
 use super::{ElGamalPrivate, ElGamalPublic};
-use crate::{keypair::{KeyPair, PrivateKey, PublicKey},
-            result::Result};
+use crate::{result::Result, KeyPair, PrivateKey, PublicKey};
 
 /// A key pair for the ElGamal cryptosystem.
 #[derive(Debug, Clone)]

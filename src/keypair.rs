@@ -1,5 +1,7 @@
-use crate::{result::Result,
-            utils::{marshal_bytes, pad_message, unmarshal_bytes, unpad_message}};
+use crate::{
+    result::Result,
+    utils::{marshal_bytes, pad_message, unmarshal_bytes, unpad_message},
+};
 
 /// Trait defining the common functionalities of a public-private cryptography key pair.
 pub trait KeyPair {

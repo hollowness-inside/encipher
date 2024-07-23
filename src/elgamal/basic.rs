@@ -2,8 +2,10 @@ use ibig::{ubig, IBig, UBig};
 use ibig_ext::powmod::PowMod;
 use rand::Rng;
 
-use crate::{result::{Error, Result},
-            utils::{marshal_bytes, unmarshal_bytes}};
+use crate::{
+    result::{Error, Result},
+    utils::{marshal_bytes, unmarshal_bytes},
+};
 
 pub(super) fn elgamal_encrypt(
     bytes: &[u8],
