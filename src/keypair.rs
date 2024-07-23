@@ -14,14 +14,7 @@ pub trait PrivateKey {
     fn decrypt_chunked(&self, message: &[u8], _chunk_size: usize) -> Result<Vec<u8>> {
         let bytes: Vec<u8> = unmarshal_bytes(message)
             .iter()
-            .map(|chunk| {
-                self.decrypt(chunk).map(|mut v| {
-                    v.pop();
-                    v
-                })
-            })
-            .collect::<Result<Vec<_>>>()?
-            .into_iter()
+            .flat_map(|chunk| self.decrypt(chunk))
             .flatten()
             .collect();
 
@@ -35,13 +28,9 @@ pub trait PublicKey {
 
     fn encrypt_chunked(&self, bytes: &[u8], chunk_size: usize) -> Result<Vec<u8>> {
         let content: Vec<Vec<_>> = bytes
-            .chunks(chunk_size - 1)
-            .map(|chunk| {
-                let mut chunk = chunk.to_vec();
-                chunk.push(0x01);
-                self.encrypt(&chunk)
-            })
-            .collect::<Result<_>>()?;
+            .chunks(chunk_size)
+            .flat_map(|chunk| self.encrypt(chunk))
+            .collect();
 
         Ok(marshal_bytes(&content))
     }
