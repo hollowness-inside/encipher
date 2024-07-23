@@ -45,12 +45,12 @@ pub trait Signer {
         hashf: fn(&[u8]) -> Vec<u8>,
         chunk_size: usize,
     ) -> Result<Vec<u8>> {
-        let signed_chunks: Vec<Vec<u8>> = data
-            .chunks(chunk_size)
-            .map(|chunk| self.sign(chunk, hashf))
-            .collect::<Result<_>>()?;
-
-        Ok(marshal_bytes(&signed_chunks))
+        Ok(marshal_bytes(
+            &data
+                .chunks(chunk_size)
+                .map(|chunk| self.sign(chunk, hashf))
+                .collect::<Result<_>>()?,
+        ))
     }
 }
 
