@@ -1,8 +1,7 @@
 use ibig::UBig;
-use ibig_ext::powmod::PowMod;
 
 use super::basic::elgamal_encrypt;
-use crate::{keypair::PublicKey, result::Result, utils::unmarshal_bytes};
+use crate::{keypair::PublicKey, result::Result};
 
 /// Public key for the ElGamal cryptosystem.
 #[derive(Debug, Clone)]

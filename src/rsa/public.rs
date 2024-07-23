@@ -1,6 +1,6 @@
 use ibig::UBig;
 
-use super::basic::{rsa_decrypt, rsa_encrypt};
+use super::basic::rsa_encrypt;
 use crate::{keypair::PublicKey, result::Result};
 
 /// Public key for the RSA algorithm.
