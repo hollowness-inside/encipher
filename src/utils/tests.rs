@@ -1,30 +1,4 @@
-use crate::utils::{marshal_bytes, pad_message, unmarshal_bytes, unpad_message};
-
-#[test]
-fn test_padding_1() {
-    let m = [5; 16];
-
-    let a = pad_message(&m, 16);
-    println!("{a:?} {}", a.len());
-
-    let b = unpad_message(&a, 16);
-    println!("{b:?} {}", b.len());
-
-    assert_eq!(m, b);
-}
-
-#[test]
-fn test_padding_2() {
-    let m = [255; 8];
-
-    let a = pad_message(&m, 16);
-    println!("{a:?} {}", a.len());
-
-    let b = unpad_message(&a, 16);
-    println!("{b:?} {}", b.len());
-
-    assert_eq!(m, b);
-}
+use crate::utils::{marshal_bytes, unmarshal_bytes};
 
 #[test]
 fn test_marshal_unmarshal() {
