@@ -1,7 +1,7 @@
 use ibig::UBig;
 use ibig_ext::powmod::PowMod;
 
-#[cfg(signatures)]
+#[cfg(feature = "signatures")]
 use crate::keypair::Verifier;
 
 use crate::result::Error;

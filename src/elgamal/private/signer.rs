@@ -2,8 +2,8 @@ use ibig::{ubig, UBig};
 use ibig_ext::powmod::PowMod;
 use rand::Rng;
 
-use crate::signatures::Signer;
 use crate::result::Result;
+use crate::signatures::Signer;
 use crate::utils::{imod, marshal_bytes, mod_sub};
 
 use super::ElGamalPrivate;

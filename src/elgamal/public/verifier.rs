@@ -1,8 +1,8 @@
 use ibig::UBig;
 use ibig_ext::powmod::PowMod;
 
-use crate::signatures::Verifier;
 use crate::result::Result;
+use crate::signatures::Verifier;
 use crate::utils::unmarshal_bytes;
 
 use super::ElGamalPublic;

@@ -37,4 +37,3 @@ impl PublicKey for ElGamalPublic {
         Ok(output)
     }
 }
-

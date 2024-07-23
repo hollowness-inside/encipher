@@ -3,7 +3,7 @@ use ibig_ext::prime_gen::gen_sized_prime;
 
 use super::{RsaPrivate, RsaPublic};
 use crate::{result::Result, PrivateKey, PublicKey};
-#[cfg(signatures)]
+#[cfg(feature = "signatures")]
 use crate::{Signer, Verifier};
 
 /// An RSA key pair for encryption and decryption.
