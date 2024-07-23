@@ -24,7 +24,7 @@ impl PrivateKey for RabinPrivate {
         let p2 = &self.prime_2;
 
         let (_, u, v) = p1.extended_gcd(p2);
-        let message = UBig::from_be_bytes(message);
+        let message = UBig::from_le_bytes(message);
         let u = imod(&u, p2);
         let v = imod(&v, p2);
 
@@ -41,7 +41,7 @@ impl PrivateKey for RabinPrivate {
         let m4: UBig = n - &m3;
 
         for m in [m1, m2, m3, m4] {
-            let m = m.to_be_bytes();
+            let m = m.to_le_bytes();
             if m.ends_with(MAGIC) {
                 return Ok(m);
             }

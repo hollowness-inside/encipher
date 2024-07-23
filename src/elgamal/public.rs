@@ -18,7 +18,7 @@ pub struct ElGamalPublic {
 impl PublicKey for ElGamalPublic {
     #[inline]
     fn encrypt(&self, bytes: &[u8]) -> Result<Vec<u8>> {
-        let message = UBig::from_be_bytes(bytes);
+        let message = UBig::from_le_bytes(bytes);
         if message >= self.prime {
             return Err(Error::SmallKey);
         }
@@ -29,8 +29,8 @@ impl PublicKey for ElGamalPublic {
         let c1 = self.alpha.powmod(r.clone(), &self.prime);
         let c2 = message * self.beta.powmod(r, &self.prime);
 
-        let c1_bytes = c1.to_be_bytes();
-        let c2_bytes = c2.to_be_bytes();
+        let c1_bytes = c1.to_le_bytes();
+        let c2_bytes = c2.to_le_bytes();
 
         let output = vec![c1_bytes, c2_bytes];
         let output = marshal_bytes(&output);

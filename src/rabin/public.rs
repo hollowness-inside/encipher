@@ -19,12 +19,12 @@ impl PublicKey for RabinPublic {
         let mut message = message.to_vec();
         message.extend(MAGIC);
 
-        let message = UBig::from_be_bytes(&message);
+        let message = UBig::from_le_bytes(&message);
         if message >= self.divisor {
             return Err(Error::SmallKey);
         }
 
         let message = message.powmod(ubig!(2), &self.divisor);
-        Ok(message.to_be_bytes())
+        Ok(message.to_le_bytes())
     }
 }

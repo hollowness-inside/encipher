@@ -21,19 +21,19 @@ pub struct RsaPrivate {
 impl PrivateKey for RsaPrivate {
     fn decrypt(&self, message: &[u8]) -> Result<Vec<u8>> {
         let div = &self.prime_1 * &self.prime_2;
-        let message = UBig::from_be_bytes(message);
+        let message = UBig::from_le_bytes(message);
         let out = message.powmod(self.exponent.clone(), &div);
 
-        Ok(out.to_be_bytes())
+        Ok(out.to_le_bytes())
     }
 }
 
 impl Signer for RsaPrivate {
     fn sign(&self, data: &[u8], hashf: fn(&[u8]) -> Vec<u8>) -> Result<Vec<u8>> {
         let divisor = &self.prime_1 * &self.prime_2;
-        let data_hash = UBig::from_be_bytes(&hashf(data));
+        let data_hash = UBig::from_le_bytes(&hashf(data));
 
         let message = data_hash.powmod(self.exponent.clone(), &divisor);
-        Ok(message.to_be_bytes())
+        Ok(message.to_le_bytes())
     }
 }

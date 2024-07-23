@@ -20,15 +20,15 @@ impl PrivateKey for ElGamalPrivate {
         let c1 = cs[0].as_slice();
         let c2 = cs[1].as_slice();
 
-        let c1 = UBig::from_be_bytes(c1);
-        let c2 = UBig::from_be_bytes(c2);
+        let c1 = UBig::from_le_bytes(c1);
+        let c2 = UBig::from_le_bytes(c2);
 
         let c1_inv = imod_inverse(&c1, &self.prime);
         let c1_inv = c1_inv.powmod(self.key.clone(), &IBig::from(&self.prime));
         let c1_inv: UBig = c1_inv.try_into().map_err(|_| Error::MathError)?;
 
         let message = (c2 * c1_inv) % &self.prime;
-        let bytes = message.to_be_bytes();
+        let bytes = message.to_le_bytes();
 
         Ok(bytes.to_vec())
     }
