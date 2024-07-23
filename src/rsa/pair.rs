@@ -9,10 +9,10 @@ use crate::{result::Result, PrivateKey, PublicKey};
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct RsaKeyPair {
     /// The public key for encryption.
-    public: RsaPublic,
+    pub public: RsaPublic,
 
     /// The private  key for decryption.
-    private: RsaPrivate,
+    pub private: RsaPrivate,
 }
 
 impl RsaKeyPair {

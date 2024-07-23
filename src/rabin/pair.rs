@@ -2,17 +2,17 @@ use ibig::UBig;
 use ibig_ext::prime_gen::gen_sized_prime;
 
 use super::{private::RabinPrivate, public::RabinPublic};
-use crate::{result::Result, KeyPair, PrivateKey, PublicKey};
+use crate::{result::Result, PrivateKey, PublicKey};
 
 /// A key pair for the Rabin cryptosystem.
 #[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct RabinKeyPair {
     /// The public key for encryption.
-    public: RabinPublic,
+    pub public: RabinPublic,
 
     /// The private key for decryption.
-    private: RabinPrivate,
+    pub private: RabinPrivate,
 }
 
 impl RabinKeyPair {

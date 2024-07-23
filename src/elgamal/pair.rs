@@ -10,10 +10,10 @@ use crate::{result::Result, PrivateKey, PublicKey};
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ElGamalKeyPair {
     /// The public key for encryption.
-    public: ElGamalPublic,
+    pub public: ElGamalPublic,
 
     /// The private key for decryption.
-    private: ElGamalPrivate,
+    pub private: ElGamalPrivate,
 }
 
 impl ElGamalKeyPair {
