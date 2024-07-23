@@ -38,9 +38,11 @@ impl Verifier for RsaPublic {
     ) -> Result<bool> {
         let expected_hash = hashf(expected);
 
-        let out = UBig::from_be_bytes(signed_data)
+        let mut out = UBig::from_le_bytes(signed_data)
             .powmod(self.exponent.clone(), &self.divisor)
-            .to_be_bytes();
+            .to_le_bytes()
+            .to_vec();
+        out.resize(expected_hash.len(), 0);
 
         Ok(out.eq(&expected_hash))
     }
