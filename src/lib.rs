@@ -7,4 +7,5 @@ pub mod rsa;
 
 mod keypair;
 pub use keypair::{PrivateKey, PublicKey};
-pub use keypair::{Signer, Verifier};
+
+mod signatures;

@@ -4,6 +4,7 @@ use rand::Rng;
 
 use super::{ElGamalPrivate, ElGamalPublic};
 use crate::{result::Result, PrivateKey, PublicKey};
+#[cfg(signatures)]
 use crate::{Signer, Verifier};
 
 /// A key pair for the ElGamal cryptosystem.
@@ -64,6 +65,7 @@ impl PublicKey for ElGamalKeyPair {
     }
 }
 
+#[cfg(signatures)]
 impl Verifier for ElGamalKeyPair {
     fn verify(
         &self,
@@ -75,6 +77,7 @@ impl Verifier for ElGamalKeyPair {
     }
 }
 
+#[cfg(signatures)]
 impl Signer for ElGamalKeyPair {
     fn sign(&self, data: &[u8], hashf: fn(&[u8]) -> Vec<u8>) -> Result<Vec<u8>> {
         self.private.sign(data, hashf)
