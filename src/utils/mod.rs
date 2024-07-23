@@ -13,5 +13,17 @@ pub(crate) fn imod(a: &IBig, m: &UBig) -> UBig {
     UBig::try_from(a.rem_euclid(IBig::from(m))).unwrap()
 }
 
+pub(crate) fn mod_sub(a: &UBig, b: &UBig, m: &UBig) -> UBig {
+    let a = a % m;
+    let b = b % m;
+
+    let diff = match a > b {
+        true => a - b,
+        false => a + (m - b),
+    };
+
+    diff % m
+}
+
 #[cfg(test)]
 mod tests;
